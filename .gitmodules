@@ -1,0 +1,3 @@
+[submodule "PDS-API"]
+	path = PDS-API
+	url = https://github.com/RENCI/PDS-API
