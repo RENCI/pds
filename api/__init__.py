@@ -29,8 +29,28 @@ def getAggregator(patient_id, model, model_plugin_id, timestamp):
     features = resp1.json()
     url = f"{pds_url_base}/{model_plugin_id}/guidance/{model}"
     resp2 = requests.post(url, json=features)
+    status_code = resp2.status_code
+    if status_code != 200:
+        try:
+            resp = resp2.json()
+        except:
+            resp = resp2.text
+        return {
+            "url": url,
+            "status_code": status_code,
+            "response": resp
+        }, 500
     
-    guidance = resp2.json()
+    try:
+        guidance = resp2.json()
+    except Exception as e:
+        resp = resp2.text
+        return {
+            "url": url,
+            "status_code": status_code,
+            "response": resp,
+            "error": str(e)
+        }, 500
     return {
         "features": features,
         "guidance": guidance
