@@ -1,43 +1,46 @@
-clinical_feature_variables = {
-    "m": [{
-        "clinical_feature_variable": "v0",
-        "description": "f0"
-    }, {
-        "clinical_feature_variable": "v1",
-        "description": "f1"
-    }, {
-        "clinical_feature_variable": "v2",
-        "description": "f2"
+config = {
+    "aggregator_plugin_id": "pds-aggregator",
+    "phenotype_mapping_plugin_id": "pds-phenotype-mapping",
+    "data_provider_plugin_id": "pds-mock-fhir",
+    "profile_plugin_id": "pp",
+    "model": [{
+        "drug": "d1",
+        "indications": [{
+            "indication": "i1",
+            "model_plugin_id": "pdsmpi-ref"
+        }]
     }]
 }
 
-phenotypes = {
-    "1000": {
-        "v0": {
-            "value": "a0",
-            "certitude": 0,
-            "calculation": "c0"
-        }, "v1": {
-            "value": "a1",
-            "certitude": 1,
-            "calculation": "c1"
-        }, "v2": {
-            "value": "a2",
-            "certitude": 2,
-            "calculation": "c2"
-        }
-    }
-}
+profile = [{
+        "value": "a0",
+        "calculation": "c0",
+        "certitude": 0,
+        "description": "f0",
+        "clinical_feature_variable": "v0"
+    }, {
+        "value": "a1",
+        "calculation": "c1",
+        "certitude": 1,
+        "description": "f1",
+        "clinical_feature_variable": "v1"
+    }, {
+        "value": "a2",
+        "calculation": "c2",
+        "certitude": 2,
+        "description": "f2",
+        "clinical_feature_variable": "v2"
+    }]
 
-def get_clinical_feature_variables(model):
-    return clinical_feature_variables.get(model, (404, "Not Found"))
+def get_config():
+    return config
 
-def get_phenotype(patient_id, clinical_feature_variable, data_provider_plugin_interface, timestamp):
-    phenotype = phenotypes.get(patient_id)
-    if phenotype is None:
-        return 404, "Not Found"
-    else:
-        return phenotype.get(clinical_feature_variable, (404, "Not Found"))
+def get_profile(patient_id, model, data_provider_plugin_id, phenotype_mapping_plugin_id, model_plugin_id, timestamp):
+    return profile
+    
+def post_guidance(model, body):
+    return "g1"
+
 
 
 

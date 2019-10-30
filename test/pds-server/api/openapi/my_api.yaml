@@ -1,13 +1,38 @@
-openapi: 3.0.0
+openapi: '3.4'
 info:
   title: "fhir server"
   version: "1.0.0"
 paths:
-  /plugin/mp/clinical_feature_variables:
+  /plugin/pp/profile:
     get:
-      operationId: api.get_clinical_feature_variables
+      operationId: api.get_profile
       parameters:
+        - name: patient_id
+          in: query
+          schema:
+            type: string
+          required: true
         - name: model
+          in: query
+          schema:
+            type: string
+          required: true
+        - name: data_provider_plugin_id
+          in: query
+          schema:
+            type: string
+          required: true
+        - name: phenotype_mapping_plugin_id
+          in: query
+          schema:
+            type: string
+          required: true
+        - name: model_plugin_id
+          in: query
+          schema:
+            type: string
+          required: true
+        - name: timestamp
           in: query
           schema:
             type: string
@@ -20,30 +45,30 @@ paths:
               schema: {}
         '404':
           description: not found
-  /plugin/pm/mapping:
-    get:
-      operationId: api.get_phenotype
+  /plugin/mp/guidance/{model}:
+    post:
+      operationId: api.post_guidance
       parameters:
-        - name: patient_id
-          in: query
+        - name: model
+          in: path
           schema:
             type: string
           required: true
-        - name: clinical_feature_variable
-          in: query
-          schema:
-            type: string
-          required: true
-        - name: data_provider_plugin_interface
-          in: query
-          schema:
-            type: string
-          required: true
-        - name: timestamp
-          in: query
-          schema:
-            type: string
-          required: true
+      requestBody:
+        content:
+          application/json:
+            schema: {}
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: not found
+  /plugin/pdsconfig/config:
+    get:
+      operationId: api.get_config
       responses: # has to match output of dispatcher.py
         '200':
           description: Successful operation

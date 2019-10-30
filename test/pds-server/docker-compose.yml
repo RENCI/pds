@@ -1,7 +1,7 @@
 version: '3.4'
 services:
   
-  pdsprofile-test-pds-server:
+  pdsaggregator-test-pds-server:
     build:
       context: test/pds-server
     expose:

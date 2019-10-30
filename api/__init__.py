@@ -7,13 +7,13 @@ pds_port = os.environ["PDS_PORT"]
 pds_config = os.environ["PDS_CONFIG"]
 pds_url_base = f"http://{pds_host}:{pds_port}/plugin"
 
-def getAggregate(patient_id, model, model_plugin_id, timestamp):
+def getAggregator(patient_id, model, model_plugin_id, timestamp):
     resp0 = requests.get(f"{pds_url_base}/{pds_config}/config")
     config = resp0.json()
     profile_plugin_id = config["profile_plugin_id"]
     data_provider_plugin_id = config["data_provider_plugin_id"]
     phenotype_mapping_plugin_id = config["phenotype_mapping_plugin_id"]
-    url = f"{pds_url_base}/{profile_plugin_interface}/profile?patient_id={patient_id}&model={model}&phenotype_mapping_plugin_id={phenotyp_mapping_plugin_id}&data_provider_plugin_id={data_provider_plugin_id}&model_plugin_id={model_plugin_id}&timestamp={timestamp}"
+    url = f"{pds_url_base}/{profile_plugin_id}/profile?patient_id={patient_id}&model={model}&phenotype_mapping_plugin_id={phenotype_mapping_plugin_id}&data_provider_plugin_id={data_provider_plugin_id}&model_plugin_id={model_plugin_id}&timestamp={timestamp}"
     resp1 = requests.get(url)
     features = resp1.json()
     url = f"{pds_url_base}/{model_plugin_id}/guidance/{model}"

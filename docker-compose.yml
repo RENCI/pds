@@ -1,14 +1,15 @@
 version: '3.4'
 services:
   
-  pdsprofile:
+  pdsaggregator:
     build:
       context: .
     restart: always
     environment:
-      PDS_HOST: pdsprofile-test-pds-server
+      PDS_HOST: pdsaggregator-test-pds-server
       PDS_PORT: 8080
+      PDS_CONFIG: $PDS_CONFIG
     ports:
-      - $PDSPROFILE_PORT:8080
+      - $API_PORT:8080
 
     
