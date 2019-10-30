@@ -11,7 +11,7 @@ info:
     name: MIT
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 paths:
-  /pg:
+  /guidance:
     get:
       summary: Add patient record directory, patient_id, system and diagnosis code
       operationId: api.getAggregator

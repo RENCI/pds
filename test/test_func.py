@@ -6,7 +6,7 @@ json_headers = {
 }
 
 def test_api():
-    result=requests.get("http://pdsaggregator:8080/pg?model=m&patient_id=0&model_plugin_id=mp&timestamp=2019-10-30T00:00:00Z", headers=json_headers)
+    result=requests.get("http://pdsaggregator:8080/guidance?model=m&patient_id=0&model_plugin_id=mp&timestamp=2019-10-30T00:00:00Z", headers=json_headers)
     print(result.content)
     assert result.status_code == 200
                 
