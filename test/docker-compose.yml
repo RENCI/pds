@@ -1,0 +1,15 @@
+version: '3.4'
+services:
+  
+  pdsprofile-test:
+    build:
+      context: test
+    command: ["-s", "-vv"]
+    depends_on:
+      - pdsprofile
+      - pdsprofile-test-pds-server
+
+
+
+    
+    

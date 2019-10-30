@@ -1,0 +1,54 @@
+openapi: 3.0.0
+info:
+  title: "fhir server"
+  version: "1.0.0"
+paths:
+  /plugin/mp/clinical_feature_variables:
+    get:
+      operationId: api.get_clinical_feature_variables
+      parameters:
+        - name: model
+          in: query
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: not found
+  /plugin/pm/mapping:
+    get:
+      operationId: api.get_phenotype
+      parameters:
+        - name: patient_id
+          in: query
+          schema:
+            type: string
+          required: true
+        - name: clinical_feature_variable
+          in: query
+          schema:
+            type: string
+          required: true
+        - name: data_provider_plugin_interface
+          in: query
+          schema:
+            type: string
+          required: true
+        - name: timestamp
+          in: query
+          schema:
+            type: string
+          required: true
+      responses: # has to match output of dispatcher.py
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: not found
