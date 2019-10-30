@@ -15,6 +15,9 @@ def getAggregator(patient_id, model, model_plugin_id, timestamp):
     phenotype_mapping_plugin_id = config["phenotype_mapping_plugin_id"]
     url = f"{pds_url_base}/{profile_plugin_id}/profile?patient_id={patient_id}&model={model}&phenotype_mapping_plugin_id={phenotype_mapping_plugin_id}&data_provider_plugin_id={data_provider_plugin_id}&model_plugin_id={model_plugin_id}&timestamp={timestamp}"
     resp1 = requests.get(url)
+    status_code = resp1.status_code
+    if status_code != 200:
+        return resp1.text, status_code
     features = resp1.json()
     url = f"{pds_url_base}/{model_plugin_id}/guidance/{model}"
     resp2 = requests.post(url, json=features)
