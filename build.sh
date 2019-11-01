@@ -1,8 +1,6 @@
 #!/bin/bash
-if [ -z $1 ]; then
+if [ -z $COMMIT_MSG ]; then
     COMMIT_MSG=update
-else
-    COMMIT_MSG=$1
 fi
 docker build . -t $IMAGE:$VERSION
 docker tag $IMAGE:0.1.0 zooh/$IMAGE:$VERSION
