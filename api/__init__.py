@@ -7,10 +7,10 @@ from oslash import Left, Right
 pds_host = os.environ["PDS_HOST"]
 pds_port = os.environ["PDS_PORT"]
 pds_config = os.environ["PDS_CONFIG"]
-pds_url_base = f"https://{pds_host}:{pds_port}/v1/plugin"
+pds_url_base = f"http://{pds_host}:{pds_port}/v1/plugin"
 
 def getAggregator(patient_id, model, model_plugin_id, timestamp):
-    resp0 = get(f"{pds_url_base}/{pds_config}/config", verify=False)
+    resp0 = get(f"{pds_url_base}/{pds_config}/config")
     if isinstance(resp0, Left):
         return resp0.value
     config = resp0.value
