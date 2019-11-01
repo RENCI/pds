@@ -18,12 +18,12 @@ def getAggregator(patient_id, model, model_plugin_id, timestamp):
     data_provider_plugin_id = config["data_provider_plugin_id"]
     phenotype_mapping_plugin_id = config["phenotype_mapping_plugin_id"]
     url = f"{pds_url_base}/{profile_plugin_id}/profile?patient_id={patient_id}&model={model}&phenotype_mapping_plugin_id={phenotype_mapping_plugin_id}&data_provider_plugin_id={data_provider_plugin_id}&model_plugin_id={model_plugin_id}&timestamp={timestamp}"
-    resp1 = get(url, verify=False)
+    resp1 = get(url)
     if isinstance(resp1, Left):
         return resp1.value
     features = resp1.value
     url = f"{pds_url_base}/{model_plugin_id}/guidance/{model}"
-    resp2 = post(url, json=features, verify=False)
+    resp2 = post(url, json=features)
     if isinstance(resp2, Left):
         return resp2.value
     guidance = resp2.value
