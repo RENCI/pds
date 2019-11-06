@@ -13,24 +13,30 @@ config = {
 }
 
 profile = [{
-        "value": "a0",
-        "calculation": "c0",
-        "certitude": 0,
-        "description": "f0",
-        "clinical_feature_variable": "v0"
-    }, {
-        "value": "a1",
-        "calculation": "c1",
-        "certitude": 1,
-        "description": "f1",
-        "clinical_feature_variable": "v1"
-    }, {
-        "value": "a2",
-        "calculation": "c2",
-        "certitude": 2,
-        "description": "f2",
-        "clinical_feature_variable": "v2"
-    }]
+    "value": "a0",
+    "calculation": "c0",
+    "certitude": 0,
+    "description": "f0",
+    "clinical_feature_variable": "v0",
+    "quantity": "q0",
+    "timestamp": "ts0"
+}, {
+    "value": "a1",
+    "calculation": "c1",
+    "certitude": 1,
+    "description": "f1",
+    "clinical_feature_variable": "v1",
+    "quantity": "q1",
+    "timestamp": "ts1"
+}, {
+    "value": "a2",
+    "calculation": "c2",
+    "certitude": 2,
+    "description": "f2",
+    "clinical_feature_variable": "v2",
+    "quantity": "q2",
+    "timestamp": "ts2"
+}]
 
 def get_config():
     return config
