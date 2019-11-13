@@ -1,7 +1,7 @@
 import os
 import requests
 import sys
-from tx.utils import get, post
+from tx.requests.utils import get, post
 from oslash import Left, Right
 
 pds_host = os.environ["PDS_HOST"]
