@@ -14,6 +14,7 @@ config = {
 
 profile = [{
     "value": "a0",
+    "unit": "u0",
     "title": "t0",
     "calculation": "c0",
     "certitude": 0,
@@ -21,6 +22,7 @@ profile = [{
     "clinical_feature_variable": "v0",
 }, {
     "value": "a1",
+    "unit": "u1",
     "title": "t1",
     "calculation": "c1",
     "certitude": 1,
@@ -28,6 +30,7 @@ profile = [{
     "clinical_feature_variable": "v1",
 }, {
     "value": "a2",
+    "unit": "u2",
     "title": "t2",
     "calculation": "c2",
     "certitude": 2,
