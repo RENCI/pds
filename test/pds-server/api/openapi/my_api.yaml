@@ -45,12 +45,12 @@ paths:
               schema: {}
         '404':
           description: not found
-  /v1/plugin/mp/guidance/{model}:
+  /v1/plugin/mp/guidance:
     post:
       operationId: api.post_guidance
       parameters:
         - name: model
-          in: path
+          in: query
           schema:
             type: string
           required: true

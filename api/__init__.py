@@ -22,7 +22,7 @@ def getAggregator(patient_id, model, model_plugin_id, timestamp):
     if isinstance(resp1, Left):
         return resp1.value
     features = resp1.value
-    url = f"{pds_url_base}/{model_plugin_id}/guidance/{model}"
+    url = f"{pds_url_base}/{model_plugin_id}/guidance?model={model}"
     resp2 = post(url, json=features)
     if isinstance(resp2, Left):
         return resp2.value
