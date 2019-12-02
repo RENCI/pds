@@ -41,7 +41,7 @@ profile = [{
 def get_config():
     return config
 
-def get_profile(patient_id, model, data_provider_plugin_id, phenotype_mapping_plugin_id, model_plugin_id, timestamp):
+def post_profile(patient_id, model_plugin_id, timestamp, body):
     return profile
     
 def post_guidance(model, body):

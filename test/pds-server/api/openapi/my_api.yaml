@@ -4,25 +4,10 @@ info:
   version: "1.0.0"
 paths:
   /v1/plugin/pp/profile:
-    get:
-      operationId: api.get_profile
+    post:
+      operationId: api.post_profile
       parameters:
         - name: patient_id
-          in: query
-          schema:
-            type: string
-          required: true
-        - name: model
-          in: query
-          schema:
-            type: string
-          required: true
-        - name: data_provider_plugin_id
-          in: query
-          schema:
-            type: string
-          required: true
-        - name: phenotype_mapping_plugin_id
           in: query
           schema:
             type: string
@@ -37,6 +22,10 @@ paths:
           schema:
             type: string
           required: true
+      requestBody:
+        content:
+          application/json:
+            schema: {}
       responses:
         '200':
           description: Successful operation
