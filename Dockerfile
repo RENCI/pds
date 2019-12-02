@@ -12,5 +12,5 @@ EXPOSE 8080
 
 ENTRYPOINT ["gunicorn"]
 
-CMD ["-w", "4", "-b", "0.0.0.0:8080", "api.server:create_app()"]
+CMD ["-w", "4", "-b", "0.0.0.0:8080", "--worker-class", "gevent", "api.server:create_app()"]
 
