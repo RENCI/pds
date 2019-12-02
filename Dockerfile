@@ -3,7 +3,7 @@ FROM python:3-alpine
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-RUN pip3 install --no-cache-dir flask gunicorn==19.9.0 connexion requests oslash
+RUN pip3 install --no-cache-dir flask gunicorn[gevent]==19.9.0 connexion requests oslash
 
 COPY api /usr/src/app/api
 COPY tx-utils/src /usr/src/app
