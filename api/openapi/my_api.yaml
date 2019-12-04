@@ -13,11 +13,12 @@ info:
 paths:
   /guidance:
     get:
-      summary: Add patient record directory, patient_id, system and diagnosis code
+      summary: Collect a list of variables with their values from profile plugin and dosing guidance. Wrap it up and return
       operationId: api.getGuidance
       parameters:
         - in: query
           name: patient_id
+          example: 38
           schema:
             type: string
           required: true
@@ -28,11 +29,13 @@ paths:
           required: true
         - in: query
           name: model_plugin_id
+          example: "pdsmpi-ref"
           schema:
             type: string
           required: true
         - in: query
           name: timestamp
+          example: "2019-12-03T13:41:09.942+00:00"
           schema:
             type: string
           required: true
@@ -52,16 +55,19 @@ paths:
       parameters:
         - in: query
           name: patient_id
+          example: 38
           schema:
             type: string
           required: true
         - in: query
           name: model_plugin_id
+          example: "pdsmpi-ref"
           schema:
             type: string
           required: true
         - in: query
           name: timestamp
+          example: "2019-12-03T13:41:09.942+00:00"
           schema:
             type: string
           required: true
@@ -86,11 +92,13 @@ components:
             properties:
               clinical_feature_variable:
                 type: string
+                example: "weight"
               title:
                 type: string
               value: {}
               calculation:
                 type: string
+                example: 1
               certitude:
                 type: integer
               description:
