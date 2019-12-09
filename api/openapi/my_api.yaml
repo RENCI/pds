@@ -92,7 +92,7 @@ components:
             properties:
               clinical_feature_variable:
                 type: string
-                example: "weight"
+                example: "LOINC:29463-7"
               title:
                 type: string
               value: {}
