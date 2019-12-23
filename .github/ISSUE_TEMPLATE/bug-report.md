@@ -2,12 +2,12 @@
 name: Bug report
 about: Create a report to help us improve
 title: "[BUG] (repo) "
-labels: bug, backlog
+labels: backlog, bug
 assignees: krobasky
 
 ---
 
-** Which repo (e.g., tx-logging)?**
+**Which repo (e.g., tx-logging)?**
 
 **What went wrong?**
 
