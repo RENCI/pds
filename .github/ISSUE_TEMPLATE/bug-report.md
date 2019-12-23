@@ -9,10 +9,10 @@ assignees: krobasky
 
 **Which repo (e.g., tx-logging)?**
 
-**What went wrong?**
+**Expected Behavior**
 
-**What specific steps reproduce it?**
+**Actual Behavior**
 
-**What did you expect should happen?**
+**Information**
 
-**Anything else (e.g., Operating systems, sotware versions)?**
+**Steps to reproduce the behavior**
