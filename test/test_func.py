@@ -71,4 +71,9 @@ def test_api_profile():
             "clinical_feature_variable": "v2",
         }
     ]
-    
+
+
+def test_ui():
+    resp = requests.get("http://pdsaggregator:8080/ui")
+
+    assert resp.status_code == 200
