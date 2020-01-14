@@ -8,7 +8,7 @@ assignees: LauraCapps
 ---
 
 ( [Project Plan](http://bit.ly/pdspplan) )
-**Which deliverable (e.g., D5)?**
+**Which deliverable?**
 
 **Which repo (e.g., tx-logging)?**
 
@@ -16,6 +16,6 @@ assignees: LauraCapps
 
 **Description**
 
-**Related tickets (e.g., #133)**
+**Related tickets**
 
 **Steps to close this ticket**
