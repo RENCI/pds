@@ -1,7 +1,7 @@
 ---
 name: Deliverable specification
 about: Create a new deliverable spec
-title: ''
+title: '[DELV](delv)'
 labels: p2Must
 assignees: LauraCapps
 
