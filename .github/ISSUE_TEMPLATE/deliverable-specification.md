@@ -1,7 +1,7 @@
 ---
 name: Deliverable specification
 about: Create a new deliverable spec
-title: '[DELV](delv)'
+title: "[DELV](delv)"
 labels: p2Must
 assignees: LauraCapps
 
@@ -16,6 +16,6 @@ assignees: LauraCapps
 
 **Description**
 
-**Related tickets (e.g., #133)
+**Related tickets (e.g., #133)**
 
 **Steps to close this ticket**
