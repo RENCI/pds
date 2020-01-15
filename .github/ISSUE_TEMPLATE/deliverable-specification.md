@@ -10,7 +10,7 @@ assignees: LauraCapps
 ( [Project Plan](http://bit.ly/pdspplan) )
 **Which deliverable?**
 
-**Which repo (e.g., tx-logging)?**
+**Which repos (e.g., tx-logging)?**
 
 **Short name**
 
