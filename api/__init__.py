@@ -1,26 +1,16 @@
 import os
 import requests
 import sys
-from tx.requests.utils import get, post
-from tx.oslash.utils import monad_utils
 from oslash import Left, Right
+from tx.requests.utils import get, post
+from tx.functional.utils import monad_utils
+
 
 pds_host = os.environ["PDS_HOST"]
 pds_port = os.environ["PDS_PORT"]
 pds_config = os.environ["PDS_CONFIG"]
 pds_url_base = f"http://{pds_host}:{pds_port}/v1/plugin"
 
-def get_guidance(body):
-    # features = get_profile(body["ptid"], body["piid"], body["timestamp"])
-    
-    url = f"{pds_url_base}/{piid}/guidance"
-    resp2 = post(url, json=body)
-    return resp2.value
-            
-def get_profile(ptid, piid, timestamp):
-pds_host = os.environ["PDS_HOST"]
-pds_port = os.environ["PDS_PORT"]
-pds_url_base = f"http://{pds_host}:{pds_port}/v1/plugin"
 cfv_schema = {
     "type": "array",
     "items": {
@@ -35,26 +25,29 @@ cfv_schema = {
             "title": {
                 "type": "string"
             },
-            "unit": {
+            "why": {
+                "type": "string"
+            },
+            "units": {
                 "type": "string"
             }
         },
         "required": [
-            "clinical_feature_variable",
+            "clinicalFeatureVariable",
             "description",
-            "title"
+            "title",
+            "why"
         ]
     }
 }
 
-def get_profile(ptid, piid, timestamp):
-    resp0 = get(f"{pds_url_base}/{pds_config}/config")
-    if isinstance(resp0, Left):
-        return resp0.value
-    config = resp0.value
-    phenotype_mapping_plugin_id = config["phenotype_mapping_plugin_id"]
-    data_provider_plugin_id = config["data_provider_plugin_id"]
-    custom_units = config.get("default_units")
+def get_profile(body):
+    ptid = body["ptid"]
+    piid = body["piid"]
+    mapper_plugin_id = body["mapper_plugin_id"]
+    fhir_plugin_id = body["fhir_plugin_id"]
+    timestamp = body["timestamp"] 
+    custom_units = body.get("default_units")
     url = f"{pds_url_base}/{piid}/clinical_feature_variables"
     resp1 = get(url, schema=cfv_schema)
     if isinstance(resp1, Left):
@@ -62,22 +55,22 @@ def get_profile(ptid, piid, timestamp):
     clinical_feature_variable_objects = resp1.value
 
     def cfvo_to_cfvo2(cfvo):
-        cfv = cfvo["clinical_feature_variable"]
+        cfv = cfvo["clinicalFeatureVariable"]
         cfvo2 = {
-            "clinical_feature_variable": cfv
+            "clinicalFeatureVariable": cfv
         }
-        unit = cfvo.get("unit")
+        unit = cfvo.get("units")
         if unit is not None:
-            cfvo2["unit"] = unit
+            cfvo2["units"] = unit
         elif custom_units is not None:
-            cus = [a for a in custom_units if a["clinical_feature_variable"] == cfv]
+            cus = [a for a in custom_units if a["clinicalFeatureVariable"] == cfv]
             if len(cus) > 0:
-                cfvo2["unit"] = cus[0]["unit"]
+                cfvo2["units"] = cus[0]["units"]
         return cfvo2
     
     cfvos2 = list(map(cfvo_to_cfvo2, clinical_feature_variable_objects))
 
-    url = f"{pds_url_base}/{phenotype_mapping_plugin_id}/mapping?patient_id={ptid}&data_provider_plugin_id={data_provider_plugin_id}&timestamp={timestamp}"
+    url = f"{pds_url_base}/{mapper_plugin_id}/mapping?ptid={ptid}&fhir_plugin_id={fhir_plugin_id}&timestamp={timestamp}"
     resp2 = post(url, json=cfvos2)
     if isinstance(resp2, Left):
         return resp2.value
@@ -90,17 +83,12 @@ def get_profile(ptid, piid, timestamp):
     return profile
             
         
-    resp0 = get(f"{pds_url_base}/{pds_config}/config")
-    if isinstance(resp0, Left):
-        return resp0.value
-    config = resp0.value
-    custom_units = config.get("custom_units")
-    profile_plugin_id = config["profile_plugin_id"]
-    data_provider_plugin_id = config["data_provider_plugin_id"]
-    phenotype_mapping_plugin_id = config["phenotype_mapping_plugin_id"]
-    url = f"{pds_url_base}/{profile_plugin_id}/profile?patient_id={ptid}&model_plugin_id={piid}&timestamp={timestamp}"
-    resp1 = post(url, json=config)
-    return resp1.value
+def get_guidance(body):
+    # features = get_profile(body["ptid"], body["piid"], body["timestamp"])
+    piid = body["piid"]
+    url = f"{pds_url_base}/{piid}/guidance"
+    resp2 = post(url, json=body)
+    return resp2.value
             
 def get_config(piid=None):
     return _get_config(piid).value
@@ -109,15 +97,18 @@ list_monad = monad_utils(lambda x: [x])
 either_monad = monad_utils(Right)
 
 def _get_config(piid=None):
-    if piid is not None:
-        return get(f"{pds_url_base}/{piid}/config").map(list_monad.pure)
+    url = f"http://{pds_host}:{pds_port}/v1/plugin/{pds_config}/config"
+    resp = get(url)
+    if isinstance(resp, Left):
+        return resp
     else:
-        url0 = f"http://{pds_host}:{pds_port}/v1/admin/plugin"
-        resp0 = get(url0)
-        if isinstance(resp0, Left):
-            return resp0
+        if piid is not None:
+            l = list(filter(lambda x : x["piid"] == piid, resp.value))
+            if len(l) == 0:
+                return Left(("not found", 404))
+            else:
+                return Right(l)
         else:
-            plugins = resp0.value
-            return either_monad.sequence(list(map(lambda plugin: get_config(plugin["name"]), plugins)))
-
+            return resp
+        
     

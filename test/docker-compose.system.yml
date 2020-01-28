@@ -1,0 +1,16 @@
+version: '3.4'
+services:
+  
+  pdsaggregator-test:
+    build:
+      context: test
+      dockerfile: Dockerfile.system
+    command: ["-s", "-vv"]
+    depends_on:
+      - pdsaggregator
+      - pdsaggregator-test-pds-server
+
+
+
+    
+    

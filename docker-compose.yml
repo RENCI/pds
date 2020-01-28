@@ -6,8 +6,8 @@ services:
       context: .
     restart: always
     environment:
-      PDS_HOST: pdsaggregator-test-pds-server
-      PDS_PORT: 8080
+      PDS_HOST: $PDS_HOST
+      PDS_PORT: $PDS_PORT
       PDS_CONFIG: $PDS_CONFIG
     ports:
       - $API_PORT:8080

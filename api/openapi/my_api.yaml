@@ -26,37 +26,23 @@ paths:
             schema:
               $ref: '#/components/schemas/GuidanceInputs'
   /profile:
-    get:
+    post:
       summary: Add patient record directory, patient_id, system and diagnosis code
       operationId: api.get_profile
-        parameters:
-        - in: query
-          name: ptid
-          example: 38
-          schema:
-            type: string
-          required: true
-        - in: query
-          name: piid
-          example: "pdspi-guidance-example"
-          schema:
-            type: string
-          required: true
-        - in: query
-          name: timestamp
-          example: "2019-12-03T13:41:09.942+00:00"
+      requestBody:
+        content:
+          application/json:
             schema:
-              type: string
-          required: true
+              $ref: '#/components/schemas/ProfileInputs'
       responses: # has to match output of dispatcher.py
         '200':
           description: Successful operation
-            content:
-              application/json:
-                schema:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/PatientVariable'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PatientVariable'
         '405':
           description: Invalid input
   /config:
@@ -127,6 +113,35 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Card'
+    ProfileInputs:
+      type: object
+      required:
+        - piid
+        - ptid
+        - mapper_plugin_id
+        - fhir_plugin_id
+        - timestamp
+      properties:
+        piid:
+          type: string
+          example: "pdspi-guidance-example"
+          description: uniquely identifies the enabled and installed plugin to use for retrieving guidance
+        mapper_plugin_id:
+          type: string
+          example: "pdspi-mapper-example"
+          description: uniquely identifies the enabled and installed plugin to use for retrieving mapper
+        fhir_plugin_id:
+          type: string
+          example: "pdspi-fhir-example"
+          description: uniquely identifies the enabled and installed plugin to use for retrieving fhir
+        ptid:
+          type: string
+          example: "38"
+          description: the ID of the patient for which guidance is required
+        timestamp:
+          type: string
+          format: date-time
+          example: "2019-12-03T13:41:09.942+00:00"
     Card:
       type: object
       required:
@@ -327,6 +342,10 @@ components:
           type: string
           description: "The unit is standard throughout the pds system. It's up to the guidance plugin to make unit conversions as needed by the guidance model, just as it is up to the dashboard to make unit conversions as needed by the end user."
           example: "years"
+        certitude:
+          type: int
+          description: The certitude of the value, 0 not certain, 1 somewhat certain, 2 certain
+          example: 2
         how:
           type: string
           description: "If the variable is 'pds-retrieve-datum', then 'how' will read 'The value was specified by the end user.'"
