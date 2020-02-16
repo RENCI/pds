@@ -64,6 +64,54 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/GuidanceInputs'
+  /v1/plugin/pdspi-fhir-example/Patient/{ptid}:
+    get:
+      summary: given a patient ID and a plugin id, return the guidance
+      operationId: api.get_patient
+      parameters:
+        - name: ptid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: guidance matching query
+          content: 
+            application/json:
+              schema: {}
+  /v1/plugin/pdspi-fhir-example/Condition:
+    get:
+      summary: given a patient ID and a plugin id, return the guidance
+      operationId: api.get_condition
+      parameters:
+        - name: patient
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: guidance matching query
+          content: 
+            application/json:
+              schema: {}
+  /v1/plugin/pdspi-fhir-example/Observation:
+    get:
+      summary: given a patient ID and a plugin id, return the guidance
+      operationId: api.get_observation
+      parameters:
+        - name: patient
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: guidance matching query
+          content: 
+            application/json:
+              schema: {}
   /v1/plugin/pdspi-config/config:
     get:
       summary: gets list of plugins with their selectors and required variables

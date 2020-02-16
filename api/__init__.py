@@ -7,7 +7,7 @@ from oslash import Left, Right
 from tx.requests.utils import get, post
 from tx.functional.utils import monad_utils
 from tx.dateutils.utils import tstostr
-
+from tx.fhir.utils import bundle, unbundle
 
 post_headers = {
     "Content-Type": "application/json",
@@ -94,6 +94,19 @@ list_monad = monad_utils(lambda x: [x])
 either_monad = monad_utils(Right)
 
 
+def _get_records(ptid, fhir_plugin_id, timestamp):
+    url_patient = f"{pds_url_base}/{fhir_plugin_id}/Patient/{ptid}"
+    url_condition = f"{pds_url_base}/{fhir_plugin_id}/Condition?patient={ptid}"
+    url_observation = f"{pds_url_base}/{fhir_plugin_id}/Observation?patient={ptid}"
+
+    return get(url_patient).bind(lambda patient: get(url_condition).bind(lambda condition: get(url_observation).bind(lambda observation: unbundle(condition).bind(lambda condition_unbundled: unbundle(observation).map(lambda observation_unbundled: bundle([
+        patient,
+        *condition_unbundled,
+        *observation_unbundled
+    ]))))))
+                          
+
+    
 def get_patient_variables(body):
     ptid = body["ptid"]
     piid = body["guidance_piid"]
@@ -125,14 +138,18 @@ def get_patient_variables(body):
         else:
             return Left(f"no configs for plugin {piid}")
 
-    def handle_mapper(cfvos2):
+    def handle_mapper(cfvos2, data):
         url = f"{pds_url_base}/{mapper_plugin_id}/mapping?ptid={ptid}&fhir_plugin_id={fhir_plugin_id}&timestamp={timestamp}"
-        return post(url, json=cfvos2)
+        return post(url, json={
+            "patientVariables": cfvos2,
+            "data": data
+        })
 
     return _get_custom_units() \
         .bind(lambda custom_units: _get_config(piid) \
               .bind(lambda config: handle_clinical_feature_variables(custom_units, config))) \
-        .bind(handle_mapper) \
+        .bind(lambda cfvo2: _get_records(ptid, fhir_plugin_id, timestamp) \
+              .bind(lambda data: handle_mapper(cfvo2, data))) \
         .value
 
 

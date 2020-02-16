@@ -74,6 +74,23 @@ phenotypes = {
     }]
 }
 
+patients = {
+    "1000": {}
+}
+
+conditions = {
+    "1000": {
+        "resourceType": "Bundle",
+        "entry": []
+    }
+}
+
+observations = {
+    "1000": {
+        "resourceType": "Bundle",
+        "entry": []
+    }
+}
 
 def get_config():
     return config
@@ -93,13 +110,28 @@ def post_log(body):
 def get_clinical_feature_variables():
     return clinical_feature_variables
 
+def get_patient(ptid):
+    return patients.get(ptid, ("not found", 404))
+
+def get_condition(patient):
+    return conditions.get(patient, {
+        "resourceType": "Bundle",
+        "entry": []
+    }) 
+
+def get_observation(patient):
+    return observations.get(patient, {
+        "resourceType": "Bundle",
+        "entry": []
+    })
+
 def get_phenotype(ptid, fhir_plugin_id, timestamp, body):
     ps = phenotypes.get(ptid)
     if ps is None:
         return ("Not Found", 404)
     else:
         for p, cfv in zip(ps, clinical_feature_variables):
-            cus = [a for a in body if a["id"] == cfv["id"]]
+            cus = [a for a in body["patientVariables"] if a["id"] == cfv["id"]]
             if len(cus) > 0:
                 q = cus[0]
                 unit = q.get("units")
