@@ -1,50 +1,79 @@
 import requests
 
-config = [{"piid":"pdspi-guidance-example"}]
-
-profile = [
+clinical_feature_variables = [
     {
-        "value": "a0",
-        "units": "u0",
-        "how": "c0",
-        "certitude": 0,
-        "variableType": {        
-            "title": "t0",
-            "description": "f0",
-            "clinicalFeatureVariable": "v0",
-            "why": "w0"
+        "id": "v0",
+        "title": "t0",
+        "why": "w0",
+        "legalValues": {
+            "type": "i0"
         }
     }, {
-        "value": "a1",
-        "units": "u1",
-        "how": "c1",
-        "certitude": 1,
-        "variableType": {
-            "title": "t1",
-            "description": "f1",
-            "clinicalFeatureVariable": "v1",
-            "why": "w1"
+        "id": "v1",
+        "title": "t1",
+        "why": "w1",
+        "legalValues": {
+            "type": "i1"
         }
     }, {
-        "value": "a2",
-        "units": "u2",
-        "how": "c2",
-        "certitude": 2,
-        "variableType": {
-            "title": "t2",
-            "description": "f2",
-            "clinicalFeatureVariable": "v2",
-            "why": "w2"
+        "id": "v2",
+        "title": "t2",
+        "why": "w2",
+        "legalValues": {
+            "type": "i2"
         }
     }
 ]
 
+config = [{
+    "piid": "pdspi-guidance-example",
+    "requiredPatientVariables": clinical_feature_variables
+}]
+
+custom_units = []
+
+selectors = []
+
 guidance = {
     "title" : "guidance title",
     "id": "guidance id",
-    "justification": profile,
+    "justification": {},
     "cards": [
     ]
+}
+
+phenotypes = {
+    "1000": [{
+        "id": "v0",
+        "title": "t0",
+        "variableValue": {
+            "value": "a0",
+            "units": "u0"
+        },
+        "certitude": 0,
+        "how": "c0",
+        "timestamp": "s0"
+    }, {
+        "id": "v1",
+        "title": "t1",
+        "variableValue": {
+            "value": "a1",
+            "units": "u1"
+        },
+        "certitude": 1,
+        "how": "c1",
+        "timestamp": "s1"
+    }, {
+        "id": "v2",
+        "title": "t2",
+        "variableValue": {
+            "value": "a2",
+            "units": "u2"
+        },
+        "certitude": 2,
+        "how": "c2",
+        "timestamp": "s2"
+    }]
 }
 
 json_headers = {
@@ -85,26 +114,26 @@ def test_api_config_piid_404():
     assert result.json() == "not found"
     
 def test_api_profile():
-    result=requests.post("http://pdsaggregator:8080/profile", json = {
+    result=requests.post("http://pdsaggregator:8080/patientVariables", json = {
         "ptid": "1000",
-        "piid": "pdspi-guidance-example",
+        "guidance_piid": "pdspi-guidance-example",
         "timestamp": "2019-10-30T00:00:00Z",
-        "mapper_plugin_id": "pdspi-mapper-example",
-        "fhir_plugin_id": "pdspi-fhir-example"
+        "mapper_piid": "pdspi-mapper-example",
+        "fhir_piid": "pdspi-fhir-example"
     }, headers=json_headers, verify=False)
     print(result.content)
     assert result.status_code == 200
                 
-    assert result.json() == profile
+    assert result.json() == phenotypes["1000"]
 
 
 def test_api_profile_404_to_500():
-    result=requests.post("http://pdsaggregator:8080/profile", json = {
+    result=requests.post("http://pdsaggregator:8080/patientVariables", json = {
         "ptid": "0",
-        "piid": "pdspi-guidance-example",
+        "guidance_piid": "pdspi-guidance-example",
         "timestamp": "2019-10-30T00:00:00Z",
-        "mapper_plugin_id": "pdspi-mapper-example",
-        "fhir_plugin_id": "pdspi-fhir-example"
+        "mapper_piid": "pdspi-mapper-example",
+        "fhir_piid": "pdspi-fhir-example"
     }, headers=json_headers, verify=False)
     print(result.content)
     assert result.status_code == 500

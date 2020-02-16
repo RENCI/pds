@@ -1,99 +1,94 @@
-config = [{
-    "piid": "pdspi-guidance-example"
-}]
-
-profile = [
+clinical_feature_variables = [
     {
-        "value": "a0",
-        "units": "u0",
-        "how": "c0",
-        "certitude": 0,
-        "variableType": {        
-            "title": "t0",
-            "description": "f0",
-            "clinicalFeatureVariable": "v0",
-            "why": "w0"
+        "id": "v0",
+        "title": "t0",
+        "why": "w0",
+        "legalValues": {
+            "type": "i0"
         }
     }, {
-        "value": "a1",
-        "units": "u1",
-        "how": "c1",
-        "certitude": 1,
-        "variableType": {
-            "title": "t1",
-            "description": "f1",
-            "clinicalFeatureVariable": "v1",
-            "why": "w1"
+        "id": "v1",
+        "title": "t1",
+        "why": "w1",
+        "legalValues": {
+            "type": "i1"
         }
     }, {
-        "value": "a2",
-        "units": "u2",
-        "how": "c2",
-        "certitude": 2,
-        "variableType": {
-            "title": "t2",
-            "description": "f2",
-            "clinicalFeatureVariable": "v2",
-            "why": "w2"
+        "id": "v2",
+        "title": "t2",
+        "why": "w2",
+        "legalValues": {
+            "type": "i2"
         }
     }
 ]
 
+config = [{
+    "piid": "pdspi-guidance-example",
+    "requiredPatientVariables": clinical_feature_variables
+}]
+
+custom_units = []
+
+selectors = []
+
 guidance = {
     "title" : "guidance title",
     "id": "guidance id",
-    "justification": profile,
+    "justification": {},
     "cards": [
     ]
+}
+
+phenotypes = {
+    "1000": [{
+        "id": "v0",
+        "title": "t0",
+        "variableValue": {
+            "value": "a0",
+            "units": "u0"
+        },
+        "certitude": 0,
+        "how": "c0",
+        "timestamp": "s0"
+    }, {
+        "id": "v1",
+        "title": "t1",
+        "variableValue": {
+            "value": "a1",
+            "units": "u1"
+        },
+        "certitude": 1,
+        "how": "c1",
+        "timestamp": "s1"
+    }, {
+        "id": "v2",
+        "title": "t2",
+        "variableValue": {
+            "value": "a2",
+            "units": "u2"
+        },
+        "certitude": 2,
+        "how": "c2",
+        "timestamp": "s2"
+    }]
 }
 
 
 def get_config():
     return config
 
-def post_profile(ptid, piid, timestamp, body):
-    return profile
-    
+def get_custom_units():
+    return custom_units
+
+def get_selectors():
+    return selectors
+
 def post_guidance(body):
     return guidance
 
-clinical_feature_variables = [
-    {
-        "clinicalFeatureVariable": "v0",
-        "description": "f0",
-        "title": "t0",
-        "why": "w0"
-    }, {
-        "clinicalFeatureVariable": "v1",
-        "description": "f1",
-        "title": "t1",
-        "why": "w1"
-    }, {
-        "clinicalFeatureVariable": "v2",
-        "description": "f2",
-        "title": "t2",
-        "why": "w2"
-    }
-]
-
-phenotypes = {
-    "1000": [{
-        "value": "a0",
-        "units": "u0",
-        "certitude": 0,
-        "how": "c0",
-    }, {
-        "value": "a1",
-        "units": "u1",
-        "certitude": 1,
-        "how": "c1",
-    }, {
-        "value": "a2",
-        "units": "u2",
-        "certitude": 2,
-        "how": "c2",
-    }]
-}
+def post_log(body):
+    return None
 
 def get_clinical_feature_variables():
     return clinical_feature_variables
@@ -104,7 +99,7 @@ def get_phenotype(ptid, fhir_plugin_id, timestamp, body):
         return ("Not Found", 404)
     else:
         for p, cfv in zip(ps, clinical_feature_variables):
-            cus = [a for a in body if a["clinicalFeatureVariable"] == cfv["clinicalFeatureVariable"]]
+            cus = [a for a in body if a["id"] == cfv["id"]]
             if len(cus) > 0:
                 q = cus[0]
                 unit = q.get("units")

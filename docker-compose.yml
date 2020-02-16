@@ -9,6 +9,8 @@ services:
       PDS_HOST: $PDS_HOST
       PDS_PORT: $PDS_PORT
       PDS_CONFIG: $PDS_CONFIG
+      PDS_VERSION: $PDS_VERSION
+      PDS_LOGGING: $PDS_LOGGING
     ports:
       - $API_PORT:8080
 
