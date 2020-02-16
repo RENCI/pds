@@ -494,6 +494,7 @@ components:
       required:
         - id
         - variableValue
+        - certitude
         - how
       properties:
         id:
@@ -512,6 +513,10 @@ components:
           type: string
           description: "A value such as 'The value was specified by the end user.' indicates that any value in the EHR has been overriden by the client via the input values to the endpoint, and they will be simply passed back here."
           example: "The value was specified by the end user."
+        certitude:
+          type: int
+          description: The certitude of the value, 0 not certain, 1 somewhat certain, 2 certain
+          example: 2
         timestamp:
           description: "If absent, defaults to current time."
           type: string
