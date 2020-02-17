@@ -1,83 +1,28 @@
 services:
   pdspi-config:
-    image: zooh/pds-config:0.2.0
+    image: txscience/pdspi-config:${TX_TAG}
     environment:
-      MONGO_HOST: pds-config-mongodb
-      MONGO_PORT: 27017
-      MONGO_DATABASE: db
-      MONGO_COLLECTION: collection
-      MONGO_NON_ROOT_USERNAME: pds
-      MONGO_NON_ROOT_PASSWORD: aaa
-      DEFAULT_CONFIG: |
-        {
-          "aggregator_plugin_id": "pds",
-          "phenotype_mapping_plugin_id": "pdspi-mapper-example",
-          "data_provider_plugin_id": "pdspi-fhir-example",
-          "profile_plugin_id": "pds-profile",
-          "model": [{
-            "drug": "gentamicin",
-            "indications": [{
-              "indication": "Pseudomonas aeruginosa",
-              "model_plugin_id": "pdsmpi-ref"
-            },
-            {
-              "indication": "Proteus species",
-              "model_plugin_id": "pdsmpi-ref"
-            },
-            {
-              "indication": "Escherichia coli",
-              "model_plugin_id": "pdsmpi-ref"
-            },
-            {
-              "indication": "Klebsiella-Enterobacter-Serratia species",
-              "model_plugin_id": "pdsmpi-ref"
-            },
-            {
-              "indication": "Citrobacter species",
-              "model_plugin_id": "pdsmpi-ref"
-            },
-            {
-              "indication": "Gram positive synergy (Enterococcal endocarditis)",
-              "model_plugin_id": "pdsmpi-ref"
-            },
-            {
-              "indication": "Staphylococcus species (coagulase-positive and coagulase-negative)",
-              "model_plugin_id": "pdsmpi-ref"
-            }]
-          }],
-          "default_units": [{
-              "clinical_feature_variable": "LOINC:2160-0",
-              "title": "serum creatinine",
-              "unit": "mg/dL"
-          }, {
-              "clinical_feature_variable": "LOINC:30525-0",
-              "title": "age",
-              "unit": "year"
-          }, {
-              "clinical_feature_variable": "LOINC:8302-2",
-              "title": "height",
-              "unit": "cm"
-          }, {
-              "clinical_feature_variable": "LOINC:29463-7",
-              "title": "weight",
-              "unit": "kg"
-          }, {
-              "clinical_feature_variable": "LOINC:39156-5",
-              "title": "bmi",
-              "unit": "kg/m^2"
-          }]
-        }
+      MONGO_HOST: ${PDSPI_CONFIG_MONGO_HOST}
+      MONGO_PORT: ${PDSPI_CONFIG_MONGO_PORT}
+      MONGO_DATABASE: ${PDSPI_CONFIG_MONGO_DATABASE}
+      MONGO_COLLECTION: ${PDSPI_CONFIG_MONGO_COLLECTION}
+      MONGO_NON_ROOT_USERNAME: ${PDSPI_CONFIG_MONGO_NON_ROOT_USERNAME}
+      MONGO_NON_ROOT_PASSWORD: ${PDSPI_CONFIG_MONGO_NON_ROOT_PASSWORD}
+      DEFAULT_CONFIG: ${PDSPI_CONFIG_DEFAULT_CONFIG}
+      PDS_HOST: ${PDS_HOST}
+      PDS_PORT: ${PDS_PORT}
+      PDS_VERSION: ${PDS_VERSION}
     port: 8080
     depends_on:
-      - pds-config-mongodb
-  pds-config-mongodb:
-    image: txscience/tx-persistence:0.2.0
+      - pdspi-config-mongodb
+  pdspi-config-mongodb:
+    image: txscience/tx-persistence:${TX_TAG}
     environment:
-      MONGO_INITDB_ROOT_USERNAME: a
-      MONGO_INITDB_ROOT_PASSWORD: a
-      MONGO_INITDB_DATABASE: db
-      MONGO_NON_ROOT_USERNAME: pds
-      MONGO_NON_ROOT_PASSWORD: aaa
+      MONGO_INITDB_ROOT_USERNAME: ${PDSPI_CONFIG_MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${PDSPI_CONFIG_MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${PDSPI_CONFIG_MONGO_INITDB_DATABASE}
+      MONGO_NON_ROOT_USERNAME: ${PDSPI_CONFIG_MONGO_NON_ROOT_USERNAME}
+      MONGO_NON_ROOT_PASSWORD: ${PDSPI_CONFIG_MONGO_NON_ROOT_PASSWORD}
     port: 8080
 
 

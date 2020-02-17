@@ -1,7 +1,7 @@
 version: '3'
 services:
   pdsmpi-ref:
-    image: txscience/pdsmpi-ref:0.2.0
+    image: txscience/pdspi-guidance-example:${TX_TAG}
     port: 5000
 
 

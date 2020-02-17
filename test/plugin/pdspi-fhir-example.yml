@@ -1,25 +1,25 @@
 services:
   pdspi-fhir-example:
-    image: txscience/pdspi-fhir-example:unstable
+    image: txscience/pdspi-fhir-example:${TX_TAG}
     environment:
-      MONGO_HOST: pdspi-fhir-example-mongodb
-      MONGO_PORT: 27017
-      MONGO_DATABASE: dpicache
-      MONGO_NON_ROOT_USERNAME: pds
-      MONGO_NON_ROOT_PASSWORD: dpi
-      FHIR_SERVER_URL_BASE: https://r3.smarthealthit.org
-      CACHE_TTL: 3600
+      MONGO_HOST: ${PDSPI_FHIR_EXAMPLE_MONGO_HOST}
+      MONGO_PORT: ${PDSPI_FHIR_EXAMPLE_MONGO_PORT}
+      MONGO_DATABASE: ${PDSPI_FHIR_EXAMPLE_MONGO_DATABASE}
+      MONGO_NON_ROOT_USERNAME: ${PDSPI_FHIR_EXAMPLE_MONGO_NON_ROOT_USERNAME}
+      MONGO_NON_ROOT_PASSWORD: ${PDSPI_FHIR_EXAMPLE_MONGO_NON_ROOT_PASSWORD}
+      FHIR_SERVER_URL_BASE: ${PDSPI_FHIR_EXAMPLE_FHIR_SERVER_URL_BASE} # https://r3.smarthealthit.org
+      CACHE_TTL: ${PDSPI_FHIR_EXAMPLE_CACHE_TTL}
     port: 8080
     depends_on:
       - pdspi-fhir-example-mongodb
   pds-fhir-example-mongodb:
-    image: txscience/tx-persistence:unstable
+    image: txscience/tx-persistence:${TX_TAG}
     environment:
-      MONGO_INITDB_ROOT_USERNAME: a
-      MONGO_INITDB_ROOT_PASSWORD: a
-      MONGO_INITDB_DATABASE: dpicache
-      MONGO_NON_ROOT_USERNAME: pds
-      MONGO_NON_ROOT_PASSWORD: dpi
+      MONGO_INITDB_ROOT_USERNAME: ${PDSPI_FHIR_EXAMPLE_MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${PDSPI_FHIR_EXAMPLE_MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${PDSPI_FHIR_EXAMPLE_MONGO_INITDB_DATABASE}
+      MONGO_NON_ROOT_USERNAME: ${PDSPI_FHIR_EXAMPLE_MONGO_NON_ROOT_USERNAME}
+      MONGO_NON_ROOT_PASSWORD: ${PDSPI_FHIR_EXAMPLE_MONGO_NON_ROOT_PASSWORD}
     port: 8080
 
 
