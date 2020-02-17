@@ -4,3 +4,6 @@
 [submodule "tx-utils"]
 	path = tx-utils
 	url = https://github.com/RENCI/tx-utils
+[submodule "test/pds-server-mock"]
+	path = test/pds-server-mock
+	url = https://github.com/RENCI/pds-server-mock
