@@ -1,0 +1,13 @@
+version: '3.4'
+services:
+  
+  pdsaggregator-test-tx-router:
+    image: txscience/tx-router:${TX_TAG}
+    volume:
+      test/pds-server-system/plugin:/plugin
+    environment:
+      INIT_PLUGIN_PATH: /plugin
+    expose:
+      - 8080
+
+    

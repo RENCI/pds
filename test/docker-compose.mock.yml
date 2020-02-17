@@ -1,0 +1,10 @@
+version: '3.4'
+services:
+  
+  pdsaggregator-test-pds-server:
+    build:
+      context: test/pds-server-mock
+    expose:
+      - 8080
+
+    
