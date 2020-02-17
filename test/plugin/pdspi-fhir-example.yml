@@ -1,0 +1,26 @@
+services:
+  pdspi-fhir-example:
+    image: txscience/pdspi-fhir-example:unstable
+    environment:
+      MONGO_HOST: pdspi-fhir-example-mongodb
+      MONGO_PORT: 27017
+      MONGO_DATABASE: dpicache
+      MONGO_NON_ROOT_USERNAME: pds
+      MONGO_NON_ROOT_PASSWORD: dpi
+      FHIR_SERVER_URL_BASE: https://r3.smarthealthit.org
+      CACHE_TTL: 3600
+    port: 8080
+    depends_on:
+      - pdspi-fhir-example-mongodb
+  pds-fhir-example-mongodb:
+    image: txscience/tx-persistence:unstable
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: a
+      MONGO_INITDB_ROOT_PASSWORD: a
+      MONGO_INITDB_DATABASE: dpicache
+      MONGO_NON_ROOT_USERNAME: pds
+      MONGO_NON_ROOT_PASSWORD: dpi
+    port: 8080
+
+
+

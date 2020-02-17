@@ -1,0 +1,10 @@
+version: '3.4'
+services:
+  pds:
+    port: 8080
+    image: zooh/pds-aggregator:0.2.0
+    environment:
+      PDS_HOST: txrouter
+      PDS_PORT: 8080
+      PDS_CONFIG: pds-config
+    
