@@ -1,6 +1,3 @@
-[submodule "PDS-API"]
-	path = PDS-API
-	url = https://github.com/RENCI/PDS-API
 [submodule "tx-utils"]
 	path = tx-utils
 	url = https://github.com/RENCI/tx-utils
