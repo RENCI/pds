@@ -1,3 +1,6 @@
+
+[![Build Status](https://travis-ci.com/RENCI/pds?branch=master)](https://travis-ci.com/RENCI/pds)
+
 This is the "umbrella" repo for the following git submodules:
 
 # Defined but not yet linked:
