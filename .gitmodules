@@ -4,3 +4,6 @@
 [submodule "test/pds-server-mock"]
 	path = test/pds-server-mock
 	url = https://github.com/RENCI/pds-server-mock
+[submodule "tx-router"]
+	path = tx-router
+	url = https://github.com/RENCI/tx-router
