@@ -68,3 +68,42 @@ def test_get_config_piid():
     # assert "pluginTypeTitle" in a
     # assert "title" in a
 
+synthetic_ptid = "smart-7321938"
+
+def test_get_Patient_ptid():
+    resp = requests.get(f"http://localhost:8080/v1/plugin/pdspi-fhir-example/Patient/{synthetic_ptid}")
+
+    assert resp.status_code == 200
+    a = resp.json()
+
+    assert "id" in a
+    assert a["id"] == synthetic_ptid
+
+def test_get_Observation_ptid():
+    resp = requests.get(f"http://localhost:8080/v1/plugin/pdspi-fhir-example/Observation?patient={synthetic_ptid}")
+
+    assert resp.status_code == 200
+    a = resp.json()
+
+    assert "resourceType" in a
+    assert a["resourceType"] == "Bundle"
+    for entry in a["entry"]:
+        assert "resource" in entry
+        resource = entry["resource"]
+        assert resource["resoureType"] == "Observation"
+        assert resource["subject"]["reference"] == f"Patient/{synthetic_ptid}"
+        
+def test_get_Condition_ptid():
+    resp = requests.get(f"http://localhost:8080/v1/plugin/pdspi-fhir-example/Condition?patient={synthetic_ptid}")
+
+    assert resp.status_code == 200
+    a = resp.json()
+
+    assert "resourceType" in a
+    assert a["resourceType"] == "Bundle"
+    for entry in a["entry"]:
+        assert "resource" in entry
+        resource = entry["resource"]
+        assert resource["resoureType"] == "Condition"
+        assert resource["subject"]["reference"] == f"Patient/{synthetic_ptid}"
+

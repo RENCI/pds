@@ -6,8 +6,8 @@ import time
 from oslash import Left, Right
 from tx.requests.utils import get, post
 from tx.functional.utils import monad_utils
-from tx.dateutils.utils import tstostr
 from tx.fhir.utils import bundle, unbundle
+from tx.logging.utils import tx_log
 
 post_headers = {
     "Content-Type": "application/json",
@@ -21,6 +21,9 @@ pds_config = os.environ["PDS_CONFIG"]
 pds_version = os.environ["PDS_VERSION"]
 pds_logging = os.environ["PDS_LOGGING"]
 pds_url_base = f"http://{pds_host}:{pds_port}/{pds_version}/plugin"
+
+def log(level, event, source, *args, **kwargs):
+    tx_log(f"{pds_url_base}/{pds_logging}", level, event, source, *args, **kwargs)
 
 cfv_schema = {
     "type": "array",
@@ -51,34 +54,6 @@ cfv_schema = {
         ]
     }
 }
-
-
-def to_json(data):
-    if data is None:
-        return None
-    if isinstance(data, dict):
-        return {k: to_json(v) for k, v in data.items()}
-    elif isinstance(data, list):
-        return [to_json(v) for v in data]
-    elif isinstance(data, int) or isinstance(data, float) or isinstance(data, bool) or isinstance(data, str):
-        return data
-    else:
-        return str(data)
-
-
-def log(level, event, source,*args, **kwargs):
-    requests.post(f"{pds_url_base}/{pds_logging}", headers=post_headers, json={
-        "event": event,
-        "level": str(level),
-        "timestamp": timestamp(),
-        "source": source,
-        "args": to_json(args),
-        "kwargs": to_json(kwargs)
-    })
-    
-
-def timestamp():
-    return tstostr(time.time())
 
 
 def _get_custom_units():
