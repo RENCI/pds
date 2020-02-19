@@ -1,7 +1,7 @@
 version: '3'
 services:
   pdslogging-mongodb:
-    image: txscience/tx-persistence:unstable
+    image: txscience/tx-persistence:${TX_TAG}
     volumes:
       - type: volume
         source: pdslogging
@@ -15,7 +15,7 @@ services:
       MONGO_NON_ROOT_PASSWORD: pdsloggingpassword
 
   pdslogging-fluentd:
-    image: txscience/tx-fluentd:unstable
+    image: txscience/tx-fluentd:${TX_TAG}
     environment:
       FLUENTD_APP: pdsloggingfluentdapp
       MONGO_HOST: pdslogging-mongodb
@@ -27,7 +27,7 @@ services:
       - pdslogging-mongodb
     
   logging:
-    image: txscience/tx-logging:unstable
+    image: txscience/tx-logging:${TX_TAG}
     port: 8080
     depends_on:
       - pdslogging-fluentd
