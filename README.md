@@ -6,6 +6,9 @@
 # system testing
 ```test.system/test.system.sh```
 
+# docker
+```docker build -t <tag> .```
+
 This is the "umbrella" repo for the following git submodules:
 
 # Defined but not yet linked:
