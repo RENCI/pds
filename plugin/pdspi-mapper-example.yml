@@ -1,9 +1,0 @@
-version: '3.4'
-services:
-  pdspi-mapper-example:
-    port: 8080
-    image: txscience/pdspi-mapper-example:${TX_TAG}
-    environment:
-      PDS_HOST: ${PDS_HOST}
-      PDS_PORT: ${PDS_PORT}
-      PDS_VERSION: ${PDS_VERSION}

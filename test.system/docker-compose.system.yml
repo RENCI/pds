@@ -6,9 +6,10 @@ services:
       context: test
       dockerfile: Dockerfile.system
     command: ["-s", "-vv"]
+    network_mode: host
     depends_on:
-      - pdsaggregator
-      - pdsaggregator-test-pds-server
+      - txrouter
+
 
 
 

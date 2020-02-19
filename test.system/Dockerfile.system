@@ -6,7 +6,7 @@ RUN mkdir /test
 
 WORKDIR /test
 
-COPY test_func_system.py /test/test_func_system.py
+COPY test_func.system.py /test/test_func_system.py
 
 ENTRYPOINT ["pytest"]
 CMD ["-s"]
