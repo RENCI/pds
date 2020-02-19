@@ -20,8 +20,28 @@ def test_get_selectors():
     assert resp.json() == config["selectors"]
     
 
+def test_get_pds_selectors():
+    resp = requests.get("http://localhost:8080/v1/plugin/pds/selectors")
+
+    assert resp.status_code == 200
+    assert resp.json() == config["selectors"]
+    
+
 def test_get_config():
     resp = requests.get("http://localhost:8080/v1/plugin/pdspi-config/config")
+
+    assert resp.status_code == 200
+    arr = resp.json()
+    assert len(arr) == 3
+    for a in arr:
+        assert "pluginType" in a
+        assert "pluginSelectors" in a
+        assert "piid" in a
+        # assert "pluginTypeTitle" in a
+        # assert "title" in a
+
+def test_get_pds_config():
+    resp = requests.get("http://localhost:8080/v1/plugin/pds/config")
 
     assert resp.status_code == 200
     arr = resp.json()
@@ -87,10 +107,10 @@ def test_get_Observation_ptid():
 
     assert "resourceType" in a
     assert a["resourceType"] == "Bundle"
-    for entry in a["entry"]:
+    for entry in a.get("entry", []):
         assert "resource" in entry
         resource = entry["resource"]
-        assert resource["resoureType"] == "Observation"
+        assert resource["resourceType"] == "Observation"
         assert resource["subject"]["reference"] == f"Patient/{synthetic_ptid}"
         
 def test_get_Condition_ptid():
@@ -101,9 +121,51 @@ def test_get_Condition_ptid():
 
     assert "resourceType" in a
     assert a["resourceType"] == "Bundle"
-    for entry in a["entry"]:
+    for entry in a.get("entry", []):
         assert "resource" in entry
         resource = entry["resource"]
-        assert resource["resoureType"] == "Condition"
+        assert resource["resourceType"] == "Condition"
         assert resource["subject"]["reference"] == f"Patient/{synthetic_ptid}"
+
+
+json_post_headers={
+    "Content-Type": "application/json",
+    "Accept": "application/json"
+}
+
+def test_get_pds_patient_variables():
+    resp = requests.post(f"http://localhost:8080/v1/plugin/pds/patientVariables", json={"ptid": "smart-7321938", "guidance_piid": "pdspi-guidance-example"}, headers=json_post_headers)
+
+    assert resp.status_code == 200
+    assert resp.json() == [
+        {
+            "certitude": 2,
+            "how": "Current date '2020-02-19' minus patient's birthdate (FHIR resource 'Patient' field>'birthDate' = '2010-12-16')",
+            "id": "LOINC:30525-0",
+            "variableValue": {
+                "units": "year",
+                "value": 9
+            }
+        },
+        {
+            "certitude": 0,
+            "how": "no record found code http://loinc.org 39156-5",
+            "id": "LOINC:39156-5",
+            "variableValue": {
+                "value": None
+            }
+        }
+    ]
+
+def test_post_pds_guidance():
+    resp = requests.post("http://localhost:8080/v1/plugin/pds/guidance", headers=json_post_headers, json={
+        "piid": "pdspi-guidance-example",
+        "ptid": synthetic_ptid
+    })
+    
+    print(resp.content)
+    assert resp.status_code == 200
+
+    rj = resp.json()
+    assert "justification" in rj
 

@@ -644,6 +644,14 @@ components:
           type: string
           example: "pdspi-guidance-example"
           description: "Uniquely identifies the enabled and installed plugin to use for retrieving guidance"
+        fhir_piid:
+          type: string
+          example: "pdspi-fhir-example"
+          description: "Uniquely identifies the enabled and installed plugin to use for mapper"
+        mapper_piid:
+          type: string
+          example: "pdspi-mapper-example"
+          description: "Uniquely identifies the enabled and installed plugin to use for fhir"
         ptid:
           description: "The ID of the patient for which guidance is required. If not specified, depend only on userSuppliedPatientVariables"
           type: string

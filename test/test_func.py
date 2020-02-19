@@ -27,7 +27,14 @@ clinical_feature_variables = [
 
 config = [{
     "piid": "pdspi-guidance-example",
+    "pluginType": "g",
     "requiredPatientVariables": clinical_feature_variables
+}, {
+    "piid": "pdspi-mapper-example",
+    "pluginType": "m"
+}, {
+    "piid": "pdspi-fhir-example",
+    "pluginType": "f"
 }]
 
 custom_units = []
@@ -83,9 +90,21 @@ json_headers = {
 
 def test_api_guidance():
     result=requests.post("http://pdsaggregator:8080/guidance", json={
-        "ptid" : "0",
+        "ptid" : "1000",
         "piid" : "pdspi-guidance-example",
         "timestamp": "2019-10-30T00:00:00Z"
+    }, headers=json_headers, verify=False)
+    print(result.content)
+    assert result.status_code == 200
+                
+    assert result.json() == guidance
+    
+def test_api_guidance_user_supplied_patient_variables():
+    result=requests.post("http://pdsaggregator:8080/guidance", json={
+        "ptid" : "0",
+        "piid" : "pdspi-guidance-example",
+        "timestamp": "2019-10-30T00:00:00Z",
+        "userSuppliedPatientVariables": []
     }, headers=json_headers, verify=False)
     print(result.content)
     assert result.status_code == 200
@@ -120,6 +139,18 @@ def test_api_profile():
         "timestamp": "2019-10-30T00:00:00Z",
         "mapper_piid": "pdspi-mapper-example",
         "fhir_piid": "pdspi-fhir-example"
+    }, headers=json_headers, verify=False)
+    print(result.content)
+    assert result.status_code == 200
+                
+    assert result.json() == phenotypes["1000"]
+
+
+def test_api_profile_default():
+    result=requests.post("http://pdsaggregator:8080/patientVariables", json = {
+        "ptid": "1000",
+        "guidance_piid": "pdspi-guidance-example",
+        "timestamp": "2019-10-30T00:00:00Z"
     }, headers=json_headers, verify=False)
     print(result.content)
     assert result.status_code == 200

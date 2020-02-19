@@ -3,11 +3,13 @@ import requests
 import sys
 import syslog
 import time
+from urllib.parse import quote
 from oslash import Left, Right
 from tx.requests.utils import get, post
 from tx.functional.utils import monad_utils
 from tx.fhir.utils import bundle, unbundle
 from tx.logging.utils import tx_log
+import tx.logging.utils
 
 post_headers = {
     "Content-Type": "application/json",
@@ -57,7 +59,7 @@ cfv_schema = {
 
 
 def _get_custom_units():
-    url = f"{pds_url_base}/{pds_config}/custom_units"
+    url = f"{pds_url_base}/{pds_config}/customUnits"
     return get(url)
 
 
@@ -81,18 +83,32 @@ def _get_records(ptid, fhir_plugin_id, timestamp):
     ]))))))
                           
 
+def default_mapper_plugin_id():
+    return next(filter(lambda x: x["pluginType"] == "m", get_config()))["piid"]
+
+def default_fhir_plugin_id():
+    return next(filter(lambda x: x["pluginType"] == "f", get_config()))["piid"]
     
 def get_patient_variables(body):
     ptid = body["ptid"]
     piid = body["guidance_piid"]
-    mapper_plugin_id = body["mapper_piid"]
-    fhir_plugin_id = body["fhir_piid"]
-    timestamp = body["timestamp"]
+    mapper_plugin_id = body.get("mapper_piid")
+    if mapper_plugin_id == None:
+        mapper_plugin_id = default_mapper_plugin_id()
+        log (syslog.LOG_ERR, f"no mapper_piid, using {mapper_plugin_id}", "pds")
+    fhir_plugin_id = body.get("fhir_piid")
+    if fhir_plugin_id == None:
+        fhir_plugin_id = default_fhir_plugin_id()
+        log (syslog.LOG_ERR, f"no fhir_piid, using {fhir_plugin_id}", "pds")
+    timestamp = body.get("timestamp")
+    if timestamp == None:
+        timestamp = tx.logging.utils.timestamp()
+        log (syslog.LOG_ERR, f"no timestamp, using {timestamp}", "pds")
     
     def handle_clinical_feature_variables(custom_units, config):
         if len(config) > 0:
             if len(config) > 1:
-                log (syslog.LOG_ERR, f"more than one configs for plugin {piid}")
+                log (syslog.LOG_ERR, f"more than one configs for plugin {piid}", "pds")
             clinical_feature_variable_objects = config[0]["requiredPatientVariables"]
             def cfvo_to_cfvo2(cfvo):
                 cfv = cfvo["id"]
@@ -114,9 +130,9 @@ def get_patient_variables(body):
             return Left(f"no configs for plugin {piid}")
 
     def handle_mapper(cfvos2, data):
-        url = f"{pds_url_base}/{mapper_plugin_id}/mapping?ptid={ptid}&fhir_plugin_id={fhir_plugin_id}&timestamp={timestamp}"
+        url = f"{pds_url_base}/{mapper_plugin_id}/mapping?patient_id={ptid}&timestamp={quote(timestamp)}"
         return post(url, json={
-            "patientVariables": cfvos2,
+            "variableTypes": cfvos2,
             "data": data
         })
 
@@ -128,12 +144,25 @@ def get_patient_variables(body):
         .value
 
 
-def get_guidance(body):
-    # features = get_profile(body["ptid"], body["piid"], body["timestamp"])
+def _get_guidance(body):
     piid = body["piid"]
+    mapper_piid = body.get("mapper_piid")
+    fhir_piid = body.get("fhir_piid")
+    if "userSuppliedPatientVariables" not in body:
+        body["userSuppliedPatientVariables"] = get_patient_variables({
+            "ptid": body["ptid"],
+            "guidance_piid": piid,
+            **({} if mapper_piid is None else {"mapper_piid": mapper_piid}),
+            **({} if fhir_piid is None else {"fhir_piid": fhir_piid})
+        })
+
     url = f"{pds_url_base}/{piid}/guidance"
     resp2 = post(url, json=body)
-    return resp2.value
+    return resp2
+            
+
+def get_guidance(body):
+    return _get_guidance(body).value
             
 
 def get_config(piid=None):

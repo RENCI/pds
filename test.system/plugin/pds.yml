@@ -2,11 +2,11 @@ version: '3.4'
 services:
   pds:
     port: 8080
-    image: txscience/pds:${TX_TAG}
+    image: pds:${TX_TAG}
     environment:
       PDS_HOST: ${PDS_HOST} 
       PDS_PORT: ${PDS_PORT}
       PDS_VERSION: ${PDS_VERSION}
       PDS_CONFIG: pdspi-config
-      PDS_LOGGIN: logging
+      PDS_LOGGING: logging
     
