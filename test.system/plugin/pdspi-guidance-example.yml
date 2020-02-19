@@ -1,0 +1,7 @@
+version: '3'
+services:
+  pdspi-guidance-example:
+    image: txscience/pdspi-guidance-example:${TX_TAG}
+    port: 8080
+
+
