@@ -21,6 +21,12 @@ tx-router: [![Build Status](https://travis-ci.com/RENCI/tx-router.svg?branch=mas
 # docker
 ```docker build -t <tag> .```
 
+# deploy
+
+set `build` env dir
+
+```test.system/deploy.sh```
+
 This is the "umbrella" repo for the following git submodules:
 
 # Defined but not yet linked:
