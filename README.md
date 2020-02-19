@@ -1,5 +1,11 @@
 [![Build Status](https://travis-ci.com/RENCI/pds.svg?branch=master)](https://travis-ci.com/RENCI/pds)
 
+# unit testing
+```test/test.sh```
+
+# system testing
+```test.system/test.system.sh```
+
 This is the "umbrella" repo for the following git submodules:
 
 # Defined but not yet linked:
