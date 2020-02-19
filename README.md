@@ -23,6 +23,8 @@ tx-router: [![Build Status](https://travis-ci.com/RENCI/tx-router.svg?branch=mas
 
 # deploy
 
+```git submodule update --init --recursive```
+
 set `build` env dir
 
 ```test.system/deploy.sh```
