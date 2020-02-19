@@ -14,6 +14,6 @@ source test/env.docker
 INIT_PLUGIN_PATH=./plugin
 set +o allexport
 
-MONGO_INITDB_ROOT_PASSWORD=example MONGO_NON_ROOT_PASSWORD=collection JWT_SECRET=secret docker-compose -f docker-compose.yml up --build -V
+MONGO_INITDB_ROOT_PASSWORD=example MONGO_NON_ROOT_PASSWORD=collection JWT_SECRET=secret docker-compose -f docker-compose.yml -f nginx/unsecure/docker-compose.yml up --build -V -t 3000
 
 
