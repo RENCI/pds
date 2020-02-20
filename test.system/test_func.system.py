@@ -209,3 +209,25 @@ def test_post_pds_guidance_user_supplied_patient_variables():
     rj = resp.json()
     assert "justification" in rj
 
+def test_post_pds_guidance_plugin_parameter_values():
+    resp = requests.post("http://localhost:8080/v1/plugin/pds/guidance", headers=json_post_headers, json={
+        "piid": "pdspi-guidance-example",
+        "ptid": synthetic_ptid,
+        "pluginParameterValues": [
+            {
+                "id": "pdspi-guidance-example:1",
+                "parameterDescription": "This calculator uses one of four extended-interval nomograms. Please choose one nomogram.",
+                "parameterValue": {
+                    "value": "Hartford"
+                },
+                "title": "Extended interval nomogram"
+            }
+        ]
+    })
+    
+    print(resp.content)
+    assert resp.status_code == 200
+
+    rj = resp.json()
+    assert "justification" in rj
+
