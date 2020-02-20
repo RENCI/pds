@@ -364,6 +364,7 @@ paths:
                     "value": "0.5",
                     "units": "years"
                   },
+                  "certitude": 1,
                   "how": "The value was specified by the end user.",
                   "timestamp": "2019-12-03T13:41:09.942+00:00"
                 } ]  }
