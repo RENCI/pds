@@ -99,7 +99,7 @@ paths:
       parameters:
         - name: piid
           description: "If present, include only information about the indicated plugin. if not present, return all guidance piids and their info."
-          example: "pdspi-guidance-example."
+          example: "pdspi-guidance-example"
           in: query
           required: false
           schema:
@@ -348,6 +348,8 @@ paths:
             example:
               { "piid": "pdspi-guidance-example",
               "ptid": "38",
+              "mapper_piid": "pdspi-mapper-example",
+              "fhir_piid": "pdspi-fhir-example",
               "timestamp": "2019-12-03T13:41:09.942+00:00",
               "pluginParameterValues": [ {
                   "id": "pdspi-guidance-example:1",
@@ -475,16 +477,17 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PatientVariableValue'
-          example:   {
+          example: [ {
               "id": "LOINC:30525-0",
               "title": "Age",
+              "certitude": 1,
               "variableValue": {
                 "value": ".5",
                 "units": "years"
               },
               "how": "The value was specified by the end user.",
               "timestamp": "2019-12-03T13:41:09.942+00:00"
-            }         
+            } ]         
         timestamp:
           description: "If absent, defaults to current time."
           type: string
@@ -506,7 +509,7 @@ components:
           description: "A non-standardized, human-readable string to describe the patient variable indicated by this id. The 'title' may be implemented by the PDS to aid in debugging, and clients should not depend on this value. The client should have prior knowledge of the supported patient variables, and thus should provide it's own human-readable titles for representation on any end-user interfaces in the appropriate language."
           example: "Age"
         variableValue:
-          type: string
+          type: object
           description: "The patient variable id maps to only one RequiredPatientVariable, which in turn, defines all the legal values (legalValues) for this id. The legalValues defines the type for the variableValue, and so can be used to inform the client on how to render the variableValue. The client can find the type by calling the '/config' endpoint, matching the 'id' with that in the 'RequiredPatientVariable' schema, and looking up 'legalValues'. The variableValue may also include the 'units' field, which is optional, and if left off, implies the system default units. NOTE: The 'variableValue' is actually an object type, but we use 'string' here to overcome a shortcoming of the swagger ui. This design choice was made in order to prioritize a better interactive documentation experience for the API user."
           example: {"value": "0.5", "units": "years"}
         how:
@@ -514,7 +517,7 @@ components:
           description: "A value such as 'The value was specified by the end user.' indicates that any value in the EHR has been overriden by the client via the input values to the endpoint, and they will be simply passed back here."
           example: "The value was specified by the end user."
         certitude:
-          type: integer
+          type: number
           description: The certitude of the value, 0 not certain, 1 somewhat certain, 2 certain
           example: 2
         timestamp:
@@ -587,7 +590,7 @@ components:
           description: "The actual value of the parameter. NOTE: This value is actually an object type, but we use 'string' here to overcome a shortcoming of the swagger ui. This design choice was made in order to prioritize a better interactive documentation experience for the API user."
           example: {"value": "Hartford"}
         legalValues:
-          type: string
+          type: object
           description: "The 'legalValues' will always be present in the '/config' endpoint response and need not be provided to or from the client in the '/guidance' endpoint call. Use the JSON schema, https://json-schema.org/draft/2019-09/json-schema-validation.html. For example, { type: 'string', 'enum': [ 'Gentamicin', 'Amikacin' ] } to define an enumeration,  { 'type': 'number' } for a float, and { 'type': 'number', 'minimum': '0' } for a positive number, and { 'type': 'integer' } for an integer. NOTE: This value is actually an object type, but we use 'string' here to overcome a shortcoming of the swagger ui. This design choice was made in order to prioritize a better interactive documentation experience for the API user. "
           example: { "type": "string", "enum": ["Hartford", "Urban-Craig", "Conventional A", "Conventional B"] }
     RequiredPatientVariable:
@@ -605,7 +608,7 @@ components:
           description: "A non-standardized, human-readable string to describe the id. May be implemented by the PDS to aid in debugging, clients should not depend on this value. NOTE: This value is actually an object type, but we use 'string' here to overcome a shortcoming of the swagger ui. This design choice was made in order to prioritize a better interactive documentation experience for the API user."
           example: "Age"
         legalValues:
-          type: string
+          type: object
           description: "If absent, all values are legal, so treat the value like a string. Use the JSON schema, https://json-schema.org/draft/2019-09/json-schema-validation.html. For example, { type: 'string', 'enum': [ 'Gentamicin', 'Amikacin' ] } to define an enumeration,  { 'type': 'number' } for a float, and { 'type': 'number', 'minimum': '0' } for a positive number, and { 'type': 'integer' } for an integer. The client should have prior knowledge of the supported patient variables, and thus should provide it's own human-readable titles for representation on any end-user interfaces in the appropriate language. NOTE: This value is actually an object type, but we use 'string' here to overcome a shortcoming of the swagger ui. This design choice was made in order to prioritize a better interactive documentation experience for the API user. "
           example: { "type": "number", "minimum": "0" }
         why:
@@ -631,7 +634,7 @@ components:
           description: "Unique identifier for this type. Stylistically, community standard coding system used for this type will preface the code used, e.g., rxCUI:1596450. If no standard exists 'PDS:<id>' will be used. The 'title' property illustrated in the example is optional and might be used by the PDS for debugging purposes. NOTE: This value is actually an object type, but we use 'string' here to overcome a shortcoming of the swagger ui. This design choice was made in order to prioritize a better interactive documentation experience for the API user. "
           example: {"value": "rxCUI:1596450", "title": "Gentamicin"}
         legalValues:
-          type: string
+          type: object
           description: "If absent, all values are legal, so treat the value like a string. Use the JSON schema, https://json-schema.org/draft/2019-09/json-schema-validation.html. For example, { type: 'string', 'enum': [ 'Gentamicin', 'Amikacin' ] } to define an enumeration,  { 'type': 'number' } for a float, and { 'type': 'number', 'minimum': '0' } for a positive number, and { 'type': 'integer' } for an integer. Furthermore, a non-standard 'title' can be added in support of a human-readable string for the type's value. This maybe be implemented by the PDS to aid in debugging, however clients should not depend on this value. NOTE: This value is actually an object type, but we use 'string' here to overcome a shortcoming of the swagger ui. This design choice was made in order to prioritize a better interactive documentation experience for the API user."
           example: { "type": "string", "enum": [{"value": "rxCUI:1596450", "title": "Gentamicin"},{"value": "rxCUI:1114195"},{"value": "rxCUI:1546356"},{"value": "rxCUI:1364430"},{"value": "rxCUI:1599538"},{"value": "rxCUI:1927851"}] }
     GuidanceInputs:
@@ -724,11 +727,11 @@ components:
                 example: "Age is used to calculate the creatinine clearance. Dosing is lower for geriatric patient and contraindicated for pediatric patients"
               variableValue:
                 description: "The justification id maps to only one PatientVariable, which in turn, defines all the legal values (legalValues) for this id. The legalValues define the type for the variableValue, and so can be used to inform the client on how to render the variableValue. The legalValues field here is optional, so the client can find the type by calling the '/config' endpoint, matching the 'id' with that in this justification schema, and looking up 'legalValues'. The variableValue may also include the 'units' field, which is optional, and if left off, implies the system default units. NOTE: The 'variableValue' is actually an object type, but we use 'string' here to overcome a shortcoming of the swagger ui. This design choice was made in order to prioritize a better interactive documentation experience for the API user."
-                type: string
+                type: object
                 example: {"value": "0.5", "units": "years"}
               legalValues: 
                 description: "The 'legalValues' will always be present in the '/config' endpoint response and need not be provided to or from the client in the '/guidance' endpoint call. Use the JSON schema, https://json-schema.org/draft/2019-09/json-schema-validation.html. For example, { type: 'string', 'enum': [ 'Gentamicin', 'Amikacin' ] } to define an enumeration,  { 'type': 'number' } for a float, and { 'type': 'number', 'minimum': '0' } for a positive number, and { 'type': 'integer' } for an integer. NOTE: This value is actually an object type, but we use 'string' here to overcome a shortcoming of the swagger ui. This design choice was made in order to prioritize a better interactive documentation experience for the API user. "
-                type: string
+                type: object
                 example: {"type": "number", "minimum": "0"}
               timestamp:
                 type: string

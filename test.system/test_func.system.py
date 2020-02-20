@@ -178,3 +178,34 @@ def test_post_pds_guidance():
     rj = resp.json()
     assert "justification" in rj
 
+def test_post_pds_guidance_user_supplied_patient_variables():
+    resp = requests.post("http://localhost:8080/v1/plugin/pds/guidance", headers=json_post_headers, json={
+        "piid": "pdspi-guidance-example",
+        "ptid": synthetic_ptid,
+        "userSuppliedPatientVariables": [
+            {
+                "certitude": 2,
+                "how": "Current date '2020-02-19' minus patient's birthdate (FHIR resource 'Patient' field>'birthDate' = '2010-12-16')",
+                "id": "LOINC:30525-0",
+                "variableValue": {
+                    "units": "year",
+                    "value": 9
+                }
+            },
+            {
+                "certitude": 0,
+                "how": "no record found code http://loinc.org 39156-5",
+                "id": "LOINC:39156-5",
+                "variableValue": {
+                    "value": None
+                }
+            }
+        ]
+    })
+    
+    print(resp.content)
+    assert resp.status_code == 200
+
+    rj = resp.json()
+    assert "justification" in rj
+
