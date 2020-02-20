@@ -134,7 +134,7 @@ json_post_headers={
 }
 
 def test_get_pds_patient_variables():
-    resp = requests.post(f"http://localhost:8080/v1/plugin/pds/patientVariables", json={"ptid": "smart-7321938", "guidance_piid": "pdspi-guidance-example"}, headers=json_post_headers)
+    resp = requests.post(f"http://localhost:8080/v1/plugin/pds/patientVariables", json={"ptid": "smart-7321938", "guidance_piid": "pdspi-guidance-example", "timestamp": "2020-02-19T00:00:00Z"}, headers=json_post_headers)
 
     print(resp.content)
     assert resp.status_code == 200
@@ -157,6 +157,14 @@ def test_get_pds_patient_variables():
             }
         }
     ]
+
+def test_get_pds_patient_variables_no_timestamp():
+    resp = requests.post(f"http://localhost:8080/v1/plugin/pds/patientVariables", json={"ptid": "smart-7321938", "guidance_piid": "pdspi-guidance-example"}, headers=json_post_headers)
+
+    print(resp.content)
+    assert resp.status_code == 200
+    rj = resp.json()
+    assert len(rj) == 2
 
 def test_post_pds_guidance():
     resp = requests.post("http://localhost:8080/v1/plugin/pds/guidance", headers=json_post_headers, json={
