@@ -8,5 +8,5 @@ services:
       PDS_PORT: ${PDS_PORT}
       PDS_VERSION: ${PDS_VERSION}
       PDS_CONFIG: pdspi-config
-      PDS_LOGGIN: logging
+      PDS_LOGGING: logging
     
