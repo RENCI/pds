@@ -4,7 +4,7 @@ pdspi-config: [![Build Status](https://travis-ci.com/RENCI/pdspi-config.svg?bran
 
 pdspi-fhir-example: [![Build Status](https://travis-ci.com/RENCI/pdspi-fhir-example.svg?branch=master)](https://travis-ci.com/RENCI/pdspi-fhir-example)
 
-pdspi-mappper-example: [![Build Status](https://travis-ci.com/RENCI/pdspi-mapper-example.svg?branch=master)](https://travis-ci.com/RENCI/pdspi-mapper-example)
+pdspi-mapper-example: [![Build Status](https://travis-ci.com/RENCI/pdspi-mapper-example.svg?branch=master)](https://travis-ci.com/RENCI/pdspi-mapper-example)
 
 pdspi-guidance-example: [![Build Status](https://travis-ci.com/RENCI/pdspi-guidance-example.svg?branch=master)](https://travis-ci.com/RENCI/pdspi-guidance-example)
 
