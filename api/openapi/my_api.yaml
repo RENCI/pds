@@ -469,9 +469,11 @@ components:
         mapper_piid:
           description: "Uniquely identifies an enabled mapper plugin to use for mapping FHIR resources to variables that are relevant to the guidance plugin. If not specified, PDS will use the default mapper."
           type: string
+          example: "pdspi-mapper-example"
         fhir_piid:
           description: "Uniquely identifies an enabled FHIR server plugin which is compatible with the named mapper plugin. If not specified, the PDS will use the default server."
           type: string
+          example: "pdspi-fhir-example"
         userSuppliedPatientVariables:
           description: "User-supplied patient values to override EHR values, and/or replace values missing in the EHR. Each item in this array should have the 'how:' value set to 'The value was specified by the end user.'"
           type: array
