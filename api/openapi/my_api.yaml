@@ -588,7 +588,7 @@ components:
           description: "Description provided by the plugin. The plugin, not the client, is therefore responsible for converting the descriptions to the appropriate language based on internationalization and personalization preferences."
           example: "This calculator uses one of four extended-interval nomograms. Please choose one nomogram."
         parameterValue:
-          type: string
+          type: object
           description: "The actual value of the parameter. NOTE: This value is actually an object type, but we use 'string' here to overcome a shortcoming of the swagger ui. This design choice was made in order to prioritize a better interactive documentation experience for the API user."
           example: {"value": "Hartford"}
         legalValues:
