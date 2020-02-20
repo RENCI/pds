@@ -136,6 +136,7 @@ json_post_headers={
 def test_get_pds_patient_variables():
     resp = requests.post(f"http://localhost:8080/v1/plugin/pds/patientVariables", json={"ptid": "smart-7321938", "guidance_piid": "pdspi-guidance-example"}, headers=json_post_headers)
 
+    print(resp.content)
     assert resp.status_code == 200
     assert resp.json() == [
         {
