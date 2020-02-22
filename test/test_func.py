@@ -28,13 +28,16 @@ clinical_feature_variables = [
 config = [{
     "piid": "pdspi-guidance-example",
     "pluginType": "g",
-    "requiredPatientVariables": clinical_feature_variables
+    "requiredPatientVariables": clinical_feature_variables,
+    "enabled": True
 }, {
     "piid": "pdspi-mapper-example",
-    "pluginType": "m"
+    "pluginType": "m",
+    "enabled": True
 }, {
     "piid": "pdspi-fhir-example",
-    "pluginType": "f"
+    "pluginType": "f",
+    "enabled": True
 }]
 
 custom_units = []
