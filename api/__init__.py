@@ -89,7 +89,7 @@ def default_mapper_plugin_id():
 def default_fhir_plugin_id():
     return next(filter(lambda x: x["pluginType"] == "f", get_config()))["piid"]
     
-def get_patient_variables(body):
+def _get_patient_variables(body):
     ptid = body["ptid"]
     piid = body["guidance_piid"]
     mapper_plugin_id = body.get("mapper_piid")
@@ -140,8 +140,11 @@ def get_patient_variables(body):
         .bind(lambda custom_units: _get_config(piid) \
               .bind(lambda config: handle_clinical_feature_variables(custom_units, config))) \
         .bind(lambda cfvo2: _get_records(ptid, fhir_plugin_id, timestamp) \
-              .bind(lambda data: handle_mapper(cfvo2, data))) \
-        .value
+              .bind(lambda data: handle_mapper(cfvo2, data)))
+
+
+def get_patient_variables(body):
+    return _get_patient_variables(body).value
 
 
 def _get_guidance(body):
@@ -149,12 +152,16 @@ def _get_guidance(body):
     mapper_piid = body.get("mapper_piid")
     fhir_piid = body.get("fhir_piid")
     if "userSuppliedPatientVariables" not in body:
-        body["userSuppliedPatientVariables"] = get_patient_variables({
+        pvs = _get_patient_variables({
             "ptid": body["ptid"],
             "guidance_piid": piid,
             **({} if mapper_piid is None else {"mapper_piid": mapper_piid}),
             **({} if fhir_piid is None else {"fhir_piid": fhir_piid})
         })
+        if isinstance(pvs, Left):
+            return pvs
+        else:
+            body["userSuppliedPatientVariables"] = pvs.value
 
     url = f"{pds_url_base}/{piid}/guidance"
     resp2 = post(url, json=body)
