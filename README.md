@@ -26,8 +26,11 @@ tx-router: [![Build Status](https://travis-ci.com/RENCI/tx-router.svg?branch=mas
 ```git submodule update --init --recursive```
 
 set `build` env dir
+## up
 
-```test.system/deploy.sh```
+```./up.sh```
+## down
+```./down.sh```
 
 This is the "umbrella" repo for the following git submodules:
 
