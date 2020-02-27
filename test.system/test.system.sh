@@ -32,6 +32,8 @@ cd tx-router
 
 if [ "$1" == "deploy" ]; then
     MONGO_INITDB_ROOT_PASSWORD=example MONGO_NON_ROOT_PASSWORD=collection JWT_SECRET=secret docker-compose -f docker-compose.yml -f nginx/unsecure/docker-compose.yml up --build -V -t 3000 -d
+if [ "$1" == "down" ]; then
+    MONGO_INITDB_ROOT_PASSWORD=example MONGO_NON_ROOT_PASSWORD=collection JWT_SECRET=secret docker-compose -f docker-compose.yml -f nginx/unsecure/docker-compose.yml down -t 3000
 elif [ "$1" == "keep_containers" ]; then
     MONGO_INITDB_ROOT_PASSWORD=example MONGO_NON_ROOT_PASSWORD=collection JWT_SECRET=secret docker-compose -f docker-compose.yml -f nginx/unsecure/docker-compose.yml -f test/docker-compose.system.yml up --build -V -t 3000
 else
