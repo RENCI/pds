@@ -32,13 +32,19 @@ set `build` env dir
 ## down
 ```./down.sh```
 
-## subnet
+## troubleshooting
+
+### subnet
 
 Sometimes docker compose would create a bridge network that conflicts with host network. We default that to `172.40.0.0/16`.
 
 If you want set the subnet manually, you can change it in `test.system/tx-router/test/env.docker`
 
 set `IPAM_CONFIG_SUBNET`
+
+### not all containers are deleted on down script
+
+You may edit `test.system/test.system.sh` look for the `-t` option the default is `3000`. If you have a lot of plugins, you may increase the number to give docker compose more time to delete all containers.
 
 
 This is the "umbrella" repo for the following git submodules:
