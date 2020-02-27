@@ -32,6 +32,15 @@ set `build` env dir
 ## down
 ```./down.sh```
 
+## subnet
+
+Sometimes docker compose would create a bridge network that conflicts with host network. We default that to `172.40.0.0/16`.
+
+If you want set the subnet manually, you can change it in `test.system/tx-router/test/env.docker`
+
+set `IPAM_CONFIG_SUBNET`
+
+
 This is the "umbrella" repo for the following git submodules:
 
 # Defined but not yet linked:
