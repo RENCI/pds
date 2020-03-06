@@ -34,6 +34,9 @@ set `build` env dir
 
 ## troubleshooting
 
+### New plugin containers are not brought up
+When you run ```./up.sh``` to bring up all containers, make sure you place your new plugin yml files under ```pds/test.system/plugin``` directory since that directory is where the ```up.sh``` script looks to bring up all plugin containers as configured.
+
 ### subnet
 
 Sometimes docker compose would create a bridge network that conflicts with host network. We default that to `172.40.0.0/16`.
