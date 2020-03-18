@@ -995,3 +995,34 @@ components:
         appContext:
           type: string
           description: "additional context to share with a linked SMART app"
+    Config:
+      type: object
+      required:
+        - pluginType
+      properties:
+        title:
+          type: string
+          description: "Meaningful name for this plugin"
+          example: "DOAC variable mapper"
+        piid:
+          type: string
+          description: "A string, unique to this deployment, used to identify this plugin in realtime"
+          example: "pdspi-mapper-DOAC"
+        pluginType:
+          type: string
+          enum: [e,g,m,f]
+          description: "A value from the enumeration below identifying the plugin type. 'g'=Guidance, 'c'=convenience, 'm'=mapper, 'f'=FHIR data server. In the clinical arena, only one FHIR server and only one mapper is allowed, and this can be indicated either with the defaults, or by only installing one mapper and one FHIR plugin type."
+          example: "m"
+        pluginTypeTitle:
+          type: string
+          description: "A human-readable value for the type. 'g'=Guidance, 'c'=Convenience, 'm'=Mapping, 'f'=FHIR"
+        pluginDependencies:
+          type: array
+          items:
+            type: string
+            description: "An array of container names upon which the plugin in question depends. For example, 'txscience/pds-fhir-example:0.2.0'. Mapper plugins must indicate a dependency on one or more FHIR plugins, but dependencies are discouraged otherwise in order to maintain the decoupling and reuse of plugins. Every plugin of type 'm' must have at least one 'f' plugin listed in pluginDependencies, otherwise return 500."
+        pluginSelectors:
+          description: "Maps the piid to a set of selector values."
+          type: array
+          items:
+            $ref: '#/components/schemas/Selector'
