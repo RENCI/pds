@@ -111,14 +111,10 @@ def _get_patient_variables(body):
                 log (syslog.LOG_ERR, f"more than one configs for plugin {piid}", "pds")
             clinical_feature_variable_objects = config[0]["requiredPatientVariables"]
             def cfvo_to_cfvo2(cfvo):
-                cfv = cfvo["id"]
-                cfvo2 = {
-                    "id": cfv
-                }
+                cfvo2 = {**cfvo}
                 unit = cfvo.get("units")
-                if unit is not None:
-                    cfvo2["units"] = unit
-                elif custom_units is not None:
+                if unit is None and custom_units is not None:
+                    cfv = cfvo["id"]
                     cus = [a for a in custom_units if a["id"] == cfv]
                     if len(cus) != 1:
                         log(syslog.LOG_ERR, f"zeor or more than one default_units for patient variable {cfv}", "pds")
