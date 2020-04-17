@@ -1,10 +1,12 @@
 version: '3'
 services:
   pdspi-guidance-sars-treatment:
-    image: txscience/pdspi-guidance-sars:${TX_TAG}
+    image: renci/pdspi-guidance-sars:${TX_TAG}
     port: 8080
     environment:
       SELECTOR_VALUE: "treatment"
       PDS_HOST: ${PDS_HOST}
       PDS_PORT: ${PDS_PORT}
       PDS_VERSION: ${PDS_VERSION}
+      PDS_CONFIG: pdspi-config
+      PDS_LOGGING: logging
