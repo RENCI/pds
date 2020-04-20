@@ -618,6 +618,10 @@ components:
           type: string
           description: "Provides the client with a human-readable, non-standard justification for why the plugin needs this particular variable. This can be rendered by the client to provide the end-user with rationale for the patient values, but does not address how the value was computed."
           example: "Age is used to calculate the creatinine clearance. Dosing is lower for geriatric patient and contraindicated for pediatric patients"
+        group:
+          type: string
+          description: "Provides the client with grouping patient variables into multiple groups"
+          example: "Body Type"
     Selector:
       description: "Used for selecting plugins"
       type: object
