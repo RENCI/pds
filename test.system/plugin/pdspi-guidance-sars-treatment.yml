@@ -1,7 +1,7 @@
 version: '3'
 services:
   pdspi-guidance-sars-treatment:
-    image: renci/pdspi-guidance-sars:${TX_TAG}
+    image: txscience/pdspi-guidance-sars:${TX_TAG}
     port: 8080
     environment:
       SELECTOR_VALUE: "treatment"
