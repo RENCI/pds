@@ -963,10 +963,6 @@ components:
         - type
         - description
       properties:
-        title:
-          type: string
-        id:
-          type: string
         type:
           type: string
           description: "type of action being performed (create/update/delete)"
