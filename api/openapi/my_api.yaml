@@ -500,7 +500,6 @@ components:
       required:
         - id
         - variableValue
-        - certitude
         - how
       properties:
         id:
@@ -600,6 +599,7 @@ components:
       type: object
       required:
         - id
+        - legalValues
         - why
       properties:
         id:
@@ -622,6 +622,10 @@ components:
           type: string
           description: "Provides the client with grouping patient variables into multiple groups"
           example: "Body Type"
+        certitude:
+          type: integer
+          description: "The certitude of the value, 0 not certain, 1 somewhat certain, 2 certain. Defaults to 0, if absent"
+          example: 2
     Selector:
       description: "Used for selecting plugins"
       type: object
