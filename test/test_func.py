@@ -28,7 +28,7 @@ clinical_feature_variables = [
 config = [{
     "piid": "pdspi-guidance-example",
     "pluginType": "g",
-    "setting_requests": {"patientVariables": clinical_feature_variables},
+    "settingsDefaults": {"patientVariables": clinical_feature_variables},
     "enabled": True
 }, {
     "piid": "pdspi-mapper-example",
