@@ -58,15 +58,6 @@ cfv_schema = {
 }
 
 
-def _get_custom_units():
-    url = f"{pds_url_base}/{pds_config}/customUnits"
-    return get(url)
-
-
-def get_custom_units():
-    return _get_custom_units().value
-
-
 list_monad = monad_utils(lambda x: [x])
 either_monad = monad_utils(Right)
 
@@ -105,21 +96,13 @@ def _get_patient_variables(body):
         timestamp = tx.logging.utils.timestamp()
         log (syslog.LOG_ERR, f"no timestamp, using {timestamp}", "pds")
     
-    def handle_clinical_feature_variables(custom_units, config):
+    def handle_clinical_feature_variables(config):
         if len(config) > 0:
             if len(config) > 1:
                 log (syslog.LOG_ERR, f"more than one configs for plugin {piid}", "pds")
             clinical_feature_variable_objects = config[0]["requiredPatientVariables"]
             def cfvo_to_cfvo2(cfvo):
                 cfvo2 = {**cfvo}
-                unit = cfvo.get("units")
-                if unit is None and custom_units is not None:
-                    cfv = cfvo["id"]
-                    cus = [a for a in custom_units if a["id"] == cfv]
-                    if len(cus) != 1:
-                        log(syslog.LOG_ERR, f"zeor or more than one default_units for patient variable {cfv}", "pds")
-                    if len(cus) > 0:
-                        cfvo2["units"] = cus[0]["units"]
                 return Right(cfvo2)
             return either_monad.sequence(list(map(cfvo_to_cfvo2, clinical_feature_variable_objects)))
         else:
@@ -132,10 +115,8 @@ def _get_patient_variables(body):
             "data": data
         })
 
-    return _get_custom_units() \
-        .bind(lambda custom_units: _get_config(piid) \
-              .bind(lambda config: handle_clinical_feature_variables(custom_units, config))) \
-        .bind(lambda cfvo2: _get_records(ptid, fhir_plugin_id, timestamp) \
+    return _get_config(piid).bind(lambda config: handle_clinical_feature_variables(config))\
+        .bind(lambda cfvo2: _get_records(ptid, fhir_plugin_id, timestamp)
               .bind(lambda data: handle_mapper(cfvo2, data)))
 
 
