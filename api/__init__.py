@@ -100,7 +100,7 @@ def _get_patient_variables(body):
         if len(config) > 0:
             if len(config) > 1:
                 log (syslog.LOG_ERR, f"more than one configs for plugin {piid}", "pds")
-            clinical_feature_variable_objects = config[0]["requiredPatientVariables"]
+            clinical_feature_variable_objects = config[0]["settingsDefaults"]["patientVariables"]
             def cfvo_to_cfvo2(cfvo):
                 cfvo2 = {**cfvo}
                 return Right(cfvo2)
@@ -128,7 +128,7 @@ def _get_guidance(body):
     piid = body["piid"]
     mapper_piid = body.get("mapper_piid")
     fhir_piid = body.get("fhir_piid")
-    if "userSuppliedPatientVariables" not in body:
+    if "settings_requested" not in body or "patientVariables" not in body["settings_requested"]:
         pvs = _get_patient_variables({
             "ptid": body["ptid"],
             "guidance_piid": piid,
@@ -138,7 +138,7 @@ def _get_guidance(body):
         if isinstance(pvs, Left):
             return pvs
         else:
-            body["userSuppliedPatientVariables"] = pvs.value
+            body["settings_requested"]["patientVariables"] = pvs.value
 
     url = f"{pds_url_base}/{piid}/guidance"
     resp2 = post(url, json=body)

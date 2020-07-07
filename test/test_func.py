@@ -28,7 +28,7 @@ clinical_feature_variables = [
 config = [{
     "piid": "pdspi-guidance-example",
     "pluginType": "g",
-    "requiredPatientVariables": clinical_feature_variables,
+    "setting_requests": {"patientVariables": clinical_feature_variables},
     "enabled": True
 }, {
     "piid": "pdspi-mapper-example",
@@ -40,16 +40,15 @@ config = [{
     "enabled": True
 }]
 
-custom_units = []
-
 selectors = []
 
 guidance = {
-    "title" : "guidance title",
-    "id": "guidance id",
-    "justification": {},
-    "cards": [
-    ]
+    "title": "guidance title",
+    "piid": "guidance id",
+    "settings_requested": {},
+    "settings_used": {},
+    "advanced": {},
+    "cards": []
 }
 
 phenotypes = {
@@ -107,7 +106,7 @@ def test_api_guidance_user_supplied_patient_variables():
         "ptid" : "0",
         "piid" : "pdspi-guidance-example",
         "timestamp": "2019-10-30T00:00:00Z",
-        "userSuppliedPatientVariables": []
+        "settings_requested": {"patientVariables": []}
     }, headers=json_headers, verify=False)
     print(result.content)
     assert result.status_code == 200

@@ -830,8 +830,6 @@ components:
       type: object
       required:
         - piid
-        - return
-        - cards
       properties:
         piid:
           type: string
@@ -860,20 +858,20 @@ components:
             specified, depend only on the 'variableValue' in 'PatientVariable', which is part of 'inputs'
           type: string
           example: smart-7321938
-        inputs:
+        settings_requested:
           $ref: '#/components/schemas/Settings'
-        return:
+        settings_used:
           $ref: '#/components/schemas/Settings'
         cards:
           type: array
           description: 'Set of suggested actions, per the CDS-Hooks standard'
           items:
             $ref: '#/components/schemas/Card'
-        specs:
+        advanced:
           type: array
-          description: Vega-lite spec used for guidance visualization
+          description: 'Set of supporting data outputs for visualization'
           items:
-            $ref: '#/components/schemas/Spec'
+            $ref: '#/components/schemas/Output'
         timeout:
           type: integer
           description: >-
@@ -894,6 +892,29 @@ components:
             Uniquely identifies an enabled mapper plugin to use for mapping FHIR
             resources to variables that are relevant to the guidance plugin. If
             not specified, PDS will use the default mapper.
+    Output:
+      type: object
+      description: supporting data output for visualization
+      properties:
+        id:
+          type: string
+          example: "oid-1"
+        name:
+          type: string
+          example: "Time-series data"
+        description:
+          type: string
+          example: "Information about time-series data"
+        data:
+          type: array
+          description: "data to be visualized"
+          items:
+            type: object
+        specs:
+          type: array
+          description: Vega-lite spec used for guidance visualization
+          items:
+            $ref: '#/components/schemas/Spec'
     Card:
       type: object
       required:
