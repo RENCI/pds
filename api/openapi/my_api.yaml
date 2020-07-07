@@ -405,6 +405,9 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Guidance'
+            example:
+              piid: "pdspi-guidance-example"
+              ptid: "smart-7321938"
       responses:
         '200':
           description: Guidance matching query

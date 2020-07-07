@@ -138,7 +138,8 @@ def _get_guidance(body):
         if isinstance(pvs, Left):
             return pvs
         else:
-            body["settings_requested"]["patientVariables"] = pvs.value
+            pat_vars = {"patientVariables": pvs.value}
+            body["settings_requested"] = pat_vars
 
     url = f"{pds_url_base}/{piid}/guidance"
     resp2 = post(url, json=body)
