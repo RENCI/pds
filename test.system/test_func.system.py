@@ -6,12 +6,6 @@ config = {"piids":["pdspi-guidance-example","pdspi-mapper-example","pdspi-fhir-e
 
 time.sleep(60)
 
-def test_get_custom_units():
-    resp = requests.get("http://localhost:8080/v1/plugin/pdspi-config/customUnits")
-
-    assert resp.status_code == 200
-    assert resp.json() == config["custom_units"]
-
 
 def test_get_selectors():
     resp = requests.get("http://localhost:8080/v1/plugin/pdspi-config/selectors")
@@ -182,7 +176,7 @@ def test_post_pds_guidance_user_supplied_patient_variables():
     resp = requests.post("http://localhost:8080/v1/plugin/pds/guidance", headers=json_post_headers, json={
         "piid": "pdspi-guidance-example",
         "ptid": synthetic_ptid,
-        "userSuppliedPatientVariables": [
+        "settings_requested": {"patientVariables": [
             {
                 "certitude": 2,
                 "how": "Current date '2020-02-19' minus patient's birthdate (FHIR resource 'Patient' field>'birthDate' = '2010-12-16')",
@@ -200,14 +194,14 @@ def test_post_pds_guidance_user_supplied_patient_variables():
                     "value": None
                 }
             }
-        ]
+        ]}
     })
     
     print(resp.content)
     assert resp.status_code == 200
 
     rj = resp.json()
-    assert "justification" in rj
+    assert "advanced" in rj
 
 def test_post_pds_guidance_plugin_parameter_values():
     resp = requests.post("http://localhost:8080/v1/plugin/pds/guidance", headers=json_post_headers, json={
