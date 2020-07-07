@@ -94,7 +94,8 @@ def test_api_guidance():
     result=requests.post("http://pdsaggregator:8080/guidance", json={
         "ptid" : "1000",
         "piid" : "pdspi-guidance-example",
-        "timestamp": "2019-10-30T00:00:00Z"
+        "timestamp": "2019-10-30T00:00:00Z",
+        "settings_requested": {'patientVariables': []}
     }, headers=json_headers, verify=False)
     print(result.content)
     assert result.status_code == 200
