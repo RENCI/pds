@@ -34,13 +34,13 @@ paths:
             schema:
               type: object
               properties:
-                  fhir_piid:
+                  fhirPiid:
                     type: string
                     example: "pdspi-fhir-example"
-                  guidance_piid: 
+                  guidancePiid: 
                     type: string
                     example: "pdspi-guidance-example"
-                  mapper_piid:
+                  mapperPiid:
                     type: string
                     example: "pdspi-mapper-example"
                   ptid:
@@ -862,9 +862,9 @@ components:
             specified, depend only on the 'variableValue' in 'PatientVariable', which is part of 'inputs'
           type: string
           example: smart-7321938
-        settings_requested:
+        settingsRequested:
           $ref: '#/components/schemas/Settings'
-        settings_used:
+        settingsUsed:
           $ref: '#/components/schemas/Settings'
         cards:
           type: array
@@ -882,14 +882,14 @@ components:
             Number of milliseconds until time out. A reasonable factory system default is
             120000 (2 minutes) for RUO applictions, and only 500ms for
             clinical.
-        fhir_piid:
+        fhirPiid:
           type: string
           example: pdspi-fhir-example
           description: >-
             Uniquely identifies an enabled FHIR server plugin which is
             compatible with the named mapper plugin. If not specified, the PDS
             will use the default server.
-        mapper_piid:
+        mapperPiid:
           type: string
           example: pdspi-mapper-example
           description: >-
