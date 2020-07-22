@@ -19,7 +19,7 @@ paths:
       summary: Return patient variables required by a guidance plugin
       description: >-
         Given a guidance plugin id (piid), mapper, FHIR plugin and patient id
-        (ptid), return all the relevant mapped patient variable values. If patientVariables values in settings_requested
+        (ptid), return all the relevant mapped patient variable values. If patientVariables values in settingsRequested
         are defined, they will override values from the mapper. If no
         mapper or FHIR server are specified, patient variable values are
         returned using the system default mapper and FHIR server. If no default
