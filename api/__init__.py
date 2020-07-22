@@ -82,15 +82,15 @@ def default_fhir_plugin_id():
     
 def _get_patient_variables(body):
     ptid = body["ptid"]
-    piid = body["guidance_piid"]
-    mapper_plugin_id = body.get("mapper_piid")
+    piid = body["guidancePiid"]
+    mapper_plugin_id = body.get("mapperPiid")
     if mapper_plugin_id == None:
         mapper_plugin_id = default_mapper_plugin_id()
-        log (syslog.LOG_ERR, f"no mapper_piid, using {mapper_plugin_id}", "pds")
-    fhir_plugin_id = body.get("fhir_piid")
+        log (syslog.LOG_ERR, f"no mapperPiid, using {mapper_plugin_id}", "pds")
+    fhir_plugin_id = body.get("fhirPiid")
     if fhir_plugin_id == None:
         fhir_plugin_id = default_fhir_plugin_id()
-        log (syslog.LOG_ERR, f"no fhir_piid, using {fhir_plugin_id}", "pds")
+        log (syslog.LOG_ERR, f"no fhirPiid, using {fhir_plugin_id}", "pds")
     timestamp = body.get("timestamp")
     if timestamp == None:
         timestamp = tx.logging.utils.timestamp()
@@ -126,20 +126,20 @@ def get_patient_variables(body):
 
 def _get_guidance(body):
     piid = body["piid"]
-    mapper_piid = body.get("mapper_piid")
-    fhir_piid = body.get("fhir_piid")
-    if "settings_requested" not in body or "patientVariables" not in body["settings_requested"]:
+    mapperPiid = body.get("mapperPiid")
+    fhirPiid = body.get("fhirPiid")
+    if "settings_requested" not in body or "patientVariables" not in body["settingsRequested"]:
         pvs = _get_patient_variables({
             "ptid": body["ptid"],
-            "guidance_piid": piid,
-            **({} if mapper_piid is None else {"mapper_piid": mapper_piid}),
-            **({} if fhir_piid is None else {"fhir_piid": fhir_piid})
+            "guidancePiid": piid,
+            **({} if mapperPiid is None else {"mapperPiid": mapperPiid}),
+            **({} if fhirPiid is None else {"fhirPiid": fhirPiid})
         })
         if isinstance(pvs, Left):
             return pvs
         else:
             pat_vars = {"patientVariables": pvs.value}
-            body["settings_requested"] = pat_vars
+            body["settingsRequested"] = pat_vars
 
     url = f"{pds_url_base}/{piid}/guidance"
     resp2 = post(url, json=body)
