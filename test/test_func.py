@@ -45,8 +45,8 @@ selectors = []
 guidance = {
     "title": "guidance title",
     "piid": "guidance id",
-    "settings_requested": {},
-    "settings_used": {},
+    "settingsRequested": {},
+    "settingsUsed": {},
     "advanced": {},
     "cards": []
 }
@@ -95,7 +95,7 @@ def test_api_guidance():
         "ptid" : "1000",
         "piid" : "pdspi-guidance-example",
         "timestamp": "2019-10-30T00:00:00Z",
-        "settings_requested": {'patientVariables': []}
+        "settingsRequested": {'patientVariables': []}
     }, headers=json_headers, verify=False)
     print(result.content)
     assert result.status_code == 200
@@ -107,7 +107,7 @@ def test_api_guidance_user_supplied_patient_variables():
         "ptid" : "0",
         "piid" : "pdspi-guidance-example",
         "timestamp": "2019-10-30T00:00:00Z",
-        "settings_requested": {"patientVariables": []}
+        "settingsRequested": {"patientVariables": []}
     }, headers=json_headers, verify=False)
     print(result.content)
     assert result.status_code == 200
@@ -138,10 +138,10 @@ def test_api_config_piid_404():
 def test_api_profile():
     result=requests.post("http://pdsaggregator:8080/patientVariables", json = {
         "ptid": "1000",
-        "guidance_piid": "pdspi-guidance-example",
+        "guidancePiid": "pdspi-guidance-example",
         "timestamp": "2019-10-30T00:00:00Z",
-        "mapper_piid": "pdspi-mapper-example",
-        "fhir_piid": "pdspi-fhir-example"
+        "mapperPiid": "pdspi-mapper-example",
+        "fhirPiid": "pdspi-fhir-example"
     }, headers=json_headers, verify=False)
     print(result.content)
     assert result.status_code == 200
@@ -152,7 +152,7 @@ def test_api_profile():
 def test_api_profile_default():
     result=requests.post("http://pdsaggregator:8080/patientVariables", json = {
         "ptid": "1000",
-        "guidance_piid": "pdspi-guidance-example",
+        "guidancePiid": "pdspi-guidance-example",
         "timestamp": "2019-10-30T00:00:00Z"
     }, headers=json_headers, verify=False)
     print(result.content)
@@ -164,10 +164,10 @@ def test_api_profile_default():
 def test_api_profile_404_to_500():
     result=requests.post("http://pdsaggregator:8080/patientVariables", json = {
         "ptid": "0",
-        "guidance_piid": "pdspi-guidance-example",
+        "guidancePiid": "pdspi-guidance-example",
         "timestamp": "2019-10-30T00:00:00Z",
-        "mapper_piid": "pdspi-mapper-example",
-        "fhir_piid": "pdspi-fhir-example"
+        "mapperPiid": "pdspi-mapper-example",
+        "fhirPiid": "pdspi-fhir-example"
     }, headers=json_headers, verify=False)
     print(result.content)
     assert result.status_code == 500
