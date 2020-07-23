@@ -128,7 +128,7 @@ def _get_guidance(body):
     piid = body["piid"]
     mapperPiid = body.get("mapperPiid")
     fhirPiid = body.get("fhirPiid")
-    if "settings_requested" not in body or "patientVariables" not in body["settingsRequested"]:
+    if "settingsRequested" not in body or "patientVariables" not in body["settingsRequested"]:
         pvs = _get_patient_variables({
             "ptid": body["ptid"],
             "guidancePiid": piid,
