@@ -176,7 +176,7 @@ def test_post_pds_guidance_user_supplied_patient_variables():
     resp = requests.post("http://localhost:8080/v1/plugin/pds/guidance", headers=json_post_headers, json={
         "piid": "pdspi-guidance-example",
         "ptid": synthetic_ptid,
-        "settings_requested": {"patientVariables": [
+        "settingsRequested": {"patientVariables": [
             {
                 "certitude": 2,
                 "how": "Current date '2020-02-19' minus patient's birthdate (FHIR resource 'Patient' field>'birthDate' = '2010-12-16')",
