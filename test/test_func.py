@@ -146,7 +146,7 @@ def test_api_profile():
     print(result.content)
     assert result.status_code == 200
                 
-    assert result.json() == phenotypes["1000"]
+    assert result.json() == [phenotypes["1000"]]
 
 
 def test_api_profile_default():
@@ -158,7 +158,7 @@ def test_api_profile_default():
     print(result.content)
     assert result.status_code == 200
                 
-    assert result.json() == phenotypes["1000"]
+    assert result.json() == [phenotypes["1000"]]
 
 
 def test_api_profile_404_to_500():
