@@ -109,15 +109,19 @@ def _get_patient_variables(body):
             return Left(f"no configs for plugin {piid}")
 
     def handle_mapper(cfvos2, data):
-        url = f"{pds_url_base}/{mapper_plugin_id}/mapping?patient_id={ptid}&timestamp={quote(timestamp)}"
+        url = f"{pds_url_base}/{mapper_plugin_id}/mapping"
         return post(url, json={
-            "variableTypes": cfvos2,
+            "patientIds": [ptid],
+            "timestamp": timestamp,
+            "settingsRequested": {
+                "patientVariables": cfvos2
+            },
             "data": data
         })
 
     return _get_config(piid).bind(lambda config: handle_clinical_feature_variables(config))\
         .bind(lambda cfvo2: _get_records(ptid, fhir_plugin_id, timestamp)
-              .bind(lambda data: handle_mapper(cfvo2, data)))
+              .bind(lambda data: handle_mapper(cfvo2, [data])))
 
 
 def get_patient_variables(body):
@@ -138,7 +142,7 @@ def _get_guidance(body):
         if isinstance(pvs, Left):
             return pvs
         else:
-            pat_vars = {"patientVariables": pvs.value}
+            pat_vars = {"patientVariables": val['values'] for val in pvs.value if val['patientId']==body['ptid']}
             body["settingsRequested"] = pat_vars
 
     url = f"{pds_url_base}/{piid}/guidance"
