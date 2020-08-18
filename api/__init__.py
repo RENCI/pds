@@ -126,7 +126,6 @@ def get_patient_variables(body):
 
 
 def _get_guidance(body):
-    ret_guidance = []
     for body_item in body:
         piid = body_item["piid"]
         mapperPiid = body_item.get("mapperPiid")
