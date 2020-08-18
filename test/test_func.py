@@ -137,7 +137,7 @@ def test_api_config_piid_404():
     
 def test_api_profile():
     result=requests.post("http://pdsaggregator:8080/patientVariables", json = {
-        "ptid": "1000",
+        "patientIds": ["1000"],
         "guidancePiid": "pdspi-guidance-example",
         "timestamp": "2019-10-30T00:00:00Z",
         "mapperPiid": "pdspi-mapper-example",
@@ -151,7 +151,7 @@ def test_api_profile():
 
 def test_api_profile_default():
     result=requests.post("http://pdsaggregator:8080/patientVariables", json = {
-        "ptid": "1000",
+        "patientIds": ["1000"],
         "guidancePiid": "pdspi-guidance-example",
         "timestamp": "2019-10-30T00:00:00Z"
     }, headers=json_headers, verify=False)
@@ -163,7 +163,7 @@ def test_api_profile_default():
 
 def test_api_profile_404_to_500():
     result=requests.post("http://pdsaggregator:8080/patientVariables", json = {
-        "ptid": "0",
+        "patientIds": ["0"],
         "guidancePiid": "pdspi-guidance-example",
         "timestamp": "2019-10-30T00:00:00Z",
         "mapperPiid": "pdspi-mapper-example",
