@@ -18,8 +18,9 @@ paths:
     post:
       summary: Return patient variables required by a guidance plugin
       description: >-
-        Given a guidance plugin id (piid), mapper, FHIR plugin and patient id
-        (ptid), return all the relevant mapped patient variable values. If patientVariables values in settingsRequested
+        Given a guidance plugin id (piid), mapper, FHIR plugin and patient id list
+        (patientIds), return all the relevant mapped patient variable values for each patient
+        in the patient id list. If patientVariables values in settingsRequested
         are defined, they will override values from the mapper. If no
         mapper or FHIR server are specified, patient variable values are
         returned using the system default mapper and FHIR server. If no default
@@ -43,9 +44,11 @@ paths:
                   mapperPiid:
                     type: string
                     example: "pdspi-mapper-example"
-                  ptid:
-                    type: string
-                    example: "smart-7321938"
+                  patientIds:
+                    example: ["smart-7321938"]
+                    type: array
+                    items:
+                      type: string
       responses:
         '200':
           description: Successful operation
@@ -54,7 +57,14 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/PatientVariable'
+                  type: object
+                  properties:
+                    patientId:
+                      type: string
+                    values:
+                      type: array
+                      items:
+                        $ref: "#/components/schemas/PatientVariable"
         '400':
           description: Bad Request
           content:
@@ -398,23 +408,28 @@ paths:
                     example: []
   /guidance:
     post:
-      summary: 'Given a patient ID and a plugin id, return the guidance'
+      summary: 'Given a patient ID list and a plugin id, return the guidance for all patients in the list'
       operationId: api.get_guidance
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Guidance'
-            example:
-              piid: "pdspi-guidance-example"
-              ptid: "smart-7321938"
+              type: array
+              items:
+                $ref: '#/components/schemas/Guidance'
+              example: [{
+                          piid: "pdspi-guidance-example",
+                          patientId: "smart-7321938"
+                        }]
       responses:
         '200':
           description: Guidance matching query
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Guidance'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Guidance'
         '400':
           description: Bad Request
           content:
@@ -856,7 +871,7 @@ components:
             The transaction id sent in the GuidanceInputs. If none were sent, a
             unique id will be created and sent back here.
           example: 38-1
-        ptid:
+        patientId:
           description: >-
             The ID of the patient for which guidance is required. If not
             specified, depend only on the 'variableValue' in 'PatientVariable', which is part of 'inputs'
