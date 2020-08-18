@@ -1,12 +1,7 @@
 import os
-import requests
-import sys
 import syslog
-import time
-from urllib.parse import quote
-from oslash import Left, Right
 from tx.requests.utils import get, post
-from tx.functional.utils import monad_utils
+from tx.functional.either import Left, Right, either
 from tx.fhir.utils import bundle, unbundle
 from tx.logging.utils import tx_log
 import tx.logging.utils
@@ -58,30 +53,32 @@ cfv_schema = {
 }
 
 
-list_monad = monad_utils(lambda x: [x])
-either_monad = monad_utils(Right)
+def _get_records(ptids, fhir_plugin_id, timestamp):
+    pt_records = []
+    for ptid in ptids:
+        url_patient = f"{pds_url_base}/{fhir_plugin_id}/Patient/{ptid}"
+        url_condition = f"{pds_url_base}/{fhir_plugin_id}/Condition?patient={ptid}"
+        url_observation = f"{pds_url_base}/{fhir_plugin_id}/Observation?patient={ptid}"
 
+        val = get(url_patient).bind(lambda patient: get(url_condition).bind(lambda condition: get(url_observation).bind(lambda observation: unbundle(condition).bind(lambda condition_unbundled: unbundle(observation).map(lambda observation_unbundled: bundle([
+            patient,
+            *condition_unbundled,
+            *observation_unbundled
+        ]))))))
+        pt_records.append(val)
+    return either.sequence(pt_records)
 
-def _get_records(ptid, fhir_plugin_id, timestamp):
-    url_patient = f"{pds_url_base}/{fhir_plugin_id}/Patient/{ptid}"
-    url_condition = f"{pds_url_base}/{fhir_plugin_id}/Condition?patient={ptid}"
-    url_observation = f"{pds_url_base}/{fhir_plugin_id}/Observation?patient={ptid}"
-
-    return get(url_patient).bind(lambda patient: get(url_condition).bind(lambda condition: get(url_observation).bind(lambda observation: unbundle(condition).bind(lambda condition_unbundled: unbundle(observation).map(lambda observation_unbundled: bundle([
-        patient,
-        *condition_unbundled,
-        *observation_unbundled
-    ]))))))
-                          
 
 def default_mapper_plugin_id():
     return next(filter(lambda x: x["pluginType"] == "m", get_config()))["piid"]
 
+
 def default_fhir_plugin_id():
     return next(filter(lambda x: x["pluginType"] == "f", get_config()))["piid"]
-    
+
+
 def _get_patient_variables(body):
-    ptid = body["ptid"]
+    patient_ids = body["patientIds"]
     piid = body["guidancePiid"]
     mapper_plugin_id = body.get("mapperPiid")
     if mapper_plugin_id == None:
@@ -104,14 +101,14 @@ def _get_patient_variables(body):
             def cfvo_to_cfvo2(cfvo):
                 cfvo2 = {**cfvo}
                 return Right(cfvo2)
-            return either_monad.sequence(list(map(cfvo_to_cfvo2, clinical_feature_variable_objects)))
+            return either.sequence(list(map(cfvo_to_cfvo2, clinical_feature_variable_objects)))
         else:
             return Left(f"no configs for plugin {piid}")
 
     def handle_mapper(cfvos2, data):
         url = f"{pds_url_base}/{mapper_plugin_id}/mapping"
         return post(url, json={
-            "patientIds": [ptid],
+            "patientIds": patient_ids,
             "timestamp": timestamp,
             "settingsRequested": {
                 "patientVariables": cfvos2
@@ -120,8 +117,8 @@ def _get_patient_variables(body):
         })
 
     return _get_config(piid).bind(lambda config: handle_clinical_feature_variables(config))\
-        .bind(lambda cfvo2: _get_records(ptid, fhir_plugin_id, timestamp)
-              .bind(lambda data: handle_mapper(cfvo2, [data])))
+        .bind(lambda cfvo2:  _get_records(patient_ids, fhir_plugin_id, timestamp)
+              .bind(lambda data: handle_mapper(cfvo2, data)))
 
 
 def get_patient_variables(body):
@@ -129,21 +126,22 @@ def get_patient_variables(body):
 
 
 def _get_guidance(body):
-    piid = body["piid"]
-    mapperPiid = body.get("mapperPiid")
-    fhirPiid = body.get("fhirPiid")
-    if "settingsRequested" not in body or "patientVariables" not in body["settingsRequested"]:
-        pvs = _get_patient_variables({
-            "ptid": body["ptid"],
-            "guidancePiid": piid,
-            **({} if mapperPiid is None else {"mapperPiid": mapperPiid}),
-            **({} if fhirPiid is None else {"fhirPiid": fhirPiid})
-        })
-        if isinstance(pvs, Left):
-            return pvs
-        else:
-            pat_vars = {"patientVariables": val['values'] for val in pvs.value if val['patientId']==body['ptid']}
-            body["settingsRequested"] = pat_vars
+    for body_item in body:
+        piid = body_item["piid"]
+        mapperPiid = body_item.get("mapperPiid")
+        fhirPiid = body_item.get("fhirPiid")
+        if "settingsRequested" not in body_item or "patientVariables" not in body_item["settingsRequested"]:
+            pvs = _get_patient_variables({
+                "patientIds": [body_item["patientId"]],
+                "guidancePiid": piid,
+                **({} if mapperPiid is None else {"mapperPiid": mapperPiid}),
+                **({} if fhirPiid is None else {"fhirPiid": fhirPiid})
+            })
+            if isinstance(pvs, Left):
+                return pvs
+            else:
+                pat_vars = {"patientVariables": val['values'] for val in pvs.value if val['patientId']==body_item['patientId']}
+                body_item["settingsRequested"] = pat_vars
 
     url = f"{pds_url_base}/{piid}/guidance"
     resp2 = post(url, json=body)
@@ -152,7 +150,7 @@ def _get_guidance(body):
 
 def get_guidance(body):
     return _get_guidance(body).value
-            
+
 
 def get_config(piid=None):
     return _get_config(piid).value

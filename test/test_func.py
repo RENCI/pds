@@ -42,14 +42,14 @@ config = [{
 
 selectors = []
 
-guidance = {
+guidance = [{
     "title": "guidance title",
     "piid": "guidance id",
     "settingsRequested": {},
     "settingsUsed": {},
     "advanced": {},
     "cards": []
-}
+}]
 
 phenotypes = {
     "1000": [{
@@ -91,24 +91,24 @@ json_headers = {
 }
 
 def test_api_guidance():
-    result=requests.post("http://pdsaggregator:8080/guidance", json={
+    result=requests.post("http://pdsaggregator:8080/guidance", json=[{
         "ptid" : "1000",
         "piid" : "pdspi-guidance-example",
         "timestamp": "2019-10-30T00:00:00Z",
         "settingsRequested": {'patientVariables': []}
-    }, headers=json_headers, verify=False)
+    }], headers=json_headers, verify=False)
     print(result.content)
     assert result.status_code == 200
                 
     assert result.json() == guidance
     
 def test_api_guidance_user_supplied_patient_variables():
-    result=requests.post("http://pdsaggregator:8080/guidance", json={
+    result=requests.post("http://pdsaggregator:8080/guidance", json=[{
         "ptid" : "0",
         "piid" : "pdspi-guidance-example",
         "timestamp": "2019-10-30T00:00:00Z",
         "settingsRequested": {"patientVariables": []}
-    }, headers=json_headers, verify=False)
+    }], headers=json_headers, verify=False)
     print(result.content)
     assert result.status_code == 200
                 
@@ -137,7 +137,7 @@ def test_api_config_piid_404():
     
 def test_api_profile():
     result=requests.post("http://pdsaggregator:8080/patientVariables", json = {
-        "ptid": "1000",
+        "patientIds": ["1000"],
         "guidancePiid": "pdspi-guidance-example",
         "timestamp": "2019-10-30T00:00:00Z",
         "mapperPiid": "pdspi-mapper-example",
@@ -151,7 +151,7 @@ def test_api_profile():
 
 def test_api_profile_default():
     result=requests.post("http://pdsaggregator:8080/patientVariables", json = {
-        "ptid": "1000",
+        "patientIds": ["1000"],
         "guidancePiid": "pdspi-guidance-example",
         "timestamp": "2019-10-30T00:00:00Z"
     }, headers=json_headers, verify=False)
@@ -163,7 +163,7 @@ def test_api_profile_default():
 
 def test_api_profile_404_to_500():
     result=requests.post("http://pdsaggregator:8080/patientVariables", json = {
-        "ptid": "0",
+        "patientIds": ["0"],
         "guidancePiid": "pdspi-guidance-example",
         "timestamp": "2019-10-30T00:00:00Z",
         "mapperPiid": "pdspi-mapper-example",
