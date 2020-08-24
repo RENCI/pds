@@ -1,9 +1,0 @@
-version: '3'
-services:
-  pdspi-guidance-example:
-    image: txscience/pdspi-guidance-example:${TX_TAG}
-    port: 8080
-    environment:
-      PDS_HOST: ${PDS_HOST}
-      PDS_PORT: ${PDS_PORT}
-      PDS_VERSION: ${PDS_VERSION}
