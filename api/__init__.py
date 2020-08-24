@@ -116,9 +116,14 @@ def _get_patient_variables(body):
             "data": data
         })
 
-    return _get_config(piid).bind(lambda config: handle_clinical_feature_variables(config))\
-        .bind(lambda cfvo2:  _get_records(patient_ids, fhir_plugin_id, timestamp)
-              .bind(lambda data: handle_mapper(cfvo2, data)))
+    return (
+        _get_config(piid)
+        .bind(lambda config: handle_clinical_feature_variables(config))
+        .bind(lambda cfvo2: (
+            _get_records(patient_ids, fhir_plugin_id, timestamp)
+            .bind(lambda data: handle_mapper(cfvo2, data)
+        )
+    )
 
 
 def get_patient_variables(body):
