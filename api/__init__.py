@@ -1,4 +1,5 @@
 import os
+from functools import partial
 import syslog
 from tx.requests.utils import get, post
 from tx.functional.either import Left, Right, either
@@ -118,10 +119,10 @@ def _get_patient_variables(body):
 
     return (
         _get_config(piid)
-        .bind(lambda config: handle_clinical_feature_variables(config))
+        .bind(handle_clinical_feature_variables)
         .bind(lambda cfvo2: (
             _get_records(patient_ids, fhir_plugin_id, timestamp)
-            .bind(lambda data: handle_mapper(cfvo2, data)
+            .bind(partial(handle_mapper, cfvo2))
         ))
     )
 
