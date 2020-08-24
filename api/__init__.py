@@ -122,7 +122,7 @@ def _get_patient_variables(body):
         .bind(lambda cfvo2: (
             _get_records(patient_ids, fhir_plugin_id, timestamp)
             .bind(lambda data: handle_mapper(cfvo2, data)
-        )
+        ))
     )
 
 
