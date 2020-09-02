@@ -3,9 +3,6 @@ pds: [![Build Status](https://travis-ci.com/RENCI/pds.svg?branch=master)](https:
 # unit testing
 ```test/test.sh```
 
-# system testing
-```test.system/test.system.sh```
-
 # docker
 ```docker build -t <tag> .```
 
@@ -13,12 +10,6 @@ pds: [![Build Status](https://travis-ci.com/RENCI/pds.svg?branch=master)](https:
 
 ```git submodule update --init --recursive```
 
-set `build` env dir
-## up
-
-```./up.sh```
-## down
-```./down.sh```
 
 ## troubleshooting
 
