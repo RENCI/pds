@@ -2,11 +2,13 @@ import os
 from functools import partial
 import syslog
 from tx.requests.utils import get, post
-from tx.functional.either import Left, Right, either
+from tx.functional.either import Left, Right, either_applicative
+from tx.functional.list import list_traversable
 from tx.fhir.utils import bundle, unbundle
 from tx.logging.utils import tx_log
 import tx.logging.utils
 
+list_traverable_either_applicative = list_traversable(either_applicative)
 post_headers = {
     "Content-Type": "application/json",
     "Accept": "application/json"
@@ -67,7 +69,7 @@ def _get_records(ptids, fhir_plugin_id, timestamp):
             *observation_unbundled
         ]))))))
         pt_records.append(val)
-    return either.sequence(pt_records)
+    return list_traversable_either_applicative.sequence(pt_records)
 
 
 def default_mapper_plugin_id():
@@ -102,7 +104,7 @@ def _get_patient_variables(body):
             def cfvo_to_cfvo2(cfvo):
                 cfvo2 = {**cfvo}
                 return Right(cfvo2)
-            return either.sequence(list(map(cfvo_to_cfvo2, clinical_feature_variable_objects)))
+            return list_traversable_either_applicative.sequence(list(map(cfvo_to_cfvo2, clinical_feature_variable_objects)))
         else:
             return Left(f"no configs for plugin {piid}")
 
