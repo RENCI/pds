@@ -8,7 +8,7 @@ from tx.fhir.utils import bundle, unbundle
 from tx.logging.utils import tx_log
 import tx.logging.utils
 
-list_traverable_either_applicative = list_traversable(either_applicative)
+list_traversable_either_applicative = list_traversable(either_applicative)
 post_headers = {
     "Content-Type": "application/json",
     "Accept": "application/json"
