@@ -1,17 +1,5 @@
 pds: [![Build Status](https://travis-ci.com/RENCI/pds.svg?branch=master)](https://travis-ci.com/RENCI/pds)
 
-pdspi-config: [![Build Status](https://travis-ci.com/RENCI/pdspi-config.svg?branch=master)](https://travis-ci.com/RENCI/pdspi-config)
-
-pdspi-fhir-example: [![Build Status](https://travis-ci.com/RENCI/pdspi-fhir-example.svg?branch=master)](https://travis-ci.com/RENCI/pdspi-fhir-example)
-
-pdspi-mapper-example: [![Build Status](https://travis-ci.com/RENCI/pdspi-mapper-example.svg?branch=master)](https://travis-ci.com/RENCI/pdspi-mapper-example)
-
-pdspi-guidance-example: [![Build Status](https://travis-ci.com/RENCI/pdspi-guidance-example.svg?branch=master)](https://travis-ci.com/RENCI/pdspi-guidance-example)
-
-tx-logging: [![Build Status](https://travis-ci.com/RENCI/tx-logging.svg?branch=master)](https://travis-ci.com/RENCI/tx-logging)
-
-tx-router: [![Build Status](https://travis-ci.com/RENCI/tx-router.svg?branch=master)](https://travis-ci.com/RENCI/tx-router)
-
 # unit testing
 ```test/test.sh```
 
