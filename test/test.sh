@@ -2,7 +2,6 @@
 set -e
 
 set -o allexport
-source env.TAG
 source test/env.docker
 set +o allexport
 
