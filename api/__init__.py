@@ -166,18 +166,13 @@ def get_config(piid=None):
 
 def _get_config(piid=None):
     url = f"{pds_url_base}/{pds_config}/config"
-    resp = get(url)
-    if isinstance(resp, Left):
-        return resp
-    else:
-        if piid is not None:
-            l = list(filter(lambda x : x["piid"] == piid, resp.value))
-            if len(l) == 0:
-                return Left(("not found", 404))
-            else:
-                return Right(l)
-        else:
-            return resp
+    if piid is not None:
+        url += f"/{piid}"
+        
+    return get(url).rec(
+        lambda err: Left(("not found", 404) if err[0]["status_code"] == 404 else err),
+        lambda config: Right(config if piid is None else [config])
+    )
 
 
 def get_selectors(piid=None):
