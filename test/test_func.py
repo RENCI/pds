@@ -40,6 +40,45 @@ config = [{
     "enabled": True
 }]
 
+selectorConfig = [{
+    "selectors": [{
+        "id": "pluginType",
+        "selectorValue": {
+            "value":  "g"
+        }
+    }],
+    "plugin": {
+        "piid": "pdspi-guidance-example",
+        "pluginType": "g",
+        "settingsDefaults": {"patientVariables": clinical_feature_variables},
+        "enabled": True
+    }
+}, {
+    "selectors": [{
+        "id": "pluginType",
+        "selectorValue": {
+            "value":  "m"
+        }
+    }],
+    "plugin": {
+        "piid": "pdspi-mapper-example",
+        "pluginType": "m",
+        "enabled": True
+    }
+}, {
+    "selectors": [{
+        "id": "pluginType",
+        "selectorValue": {
+            "value":  "f"
+        }
+    }],
+    "plugin": {
+        "piid": "pdspi-fhir-example",
+        "pluginType": "f",
+        "enabled": True
+    }
+}]
+
 selectors = []
 
 guidance = [{
@@ -134,6 +173,13 @@ def test_api_config_piid_404():
     assert result.status_code == 404
                 
     assert result.json() == "not found"
+    
+def test_api_select_config():
+    result=requests.get("http://pdsaggregator:8080/selectorConfig", headers=json_headers, verify=False)
+    print(result.content)
+    assert result.status_code == 200
+                
+    assert result.json() == selectorConfig
     
 def test_api_profile():
     result=requests.post("http://pdsaggregator:8080/patientVariables", json = {

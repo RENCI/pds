@@ -164,15 +164,28 @@ def get_config(piid=None):
     return _get_config(piid).value
 
 
+def error_code(result):
+    return result.rec(
+        lambda err: Left(("not found", 404) if err[0]["status_code"] == 404 else err),
+        lambda config: Right(config)
+    )
+
 def _get_config(piid=None):
     url = f"{pds_url_base}/{pds_config}/config"
     if piid is not None:
         url += f"/{piid}"
         
-    return get(url).rec(
-        lambda err: Left(("not found", 404) if err[0]["status_code"] == 404 else err),
-        lambda config: Right(config if piid is None else [config])
-    )
+    return error_code(get(url)).map(lambda config: config if piid is None else [config])
+
+
+def get_selector_config():
+    return _get_selector_config().value
+
+
+def _get_selector_config():
+    url = f"{pds_url_base}/{pds_config}/selectorConfig"
+        
+    return error_code(get(url))
 
 
 def get_selectors(piid=None):

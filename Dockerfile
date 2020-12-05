@@ -1,11 +1,11 @@
-FROM python:3-alpine
+FROM python:3.8-alpine
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
+RUN apk add gcc file make python3-dev musl-dev libffi-dev openssl-dev
 
-RUN apk add --no-cache gcc musl-dev libffi-dev openssl-dev file make
-RUN pip3 install --no-cache-dir flask gunicorn[gevent]==19.9.0 connexion[swagger-ui] requests tx-functional python-dateutil 
+RUN pip3 install --no-cache-dir flask gevent==20.9.0 gunicorn==20.0.4 connexion[swagger-ui] requests tx-functional python-dateutil
 
 COPY api /usr/src/app/api
 COPY tx-utils/src /usr/src/app

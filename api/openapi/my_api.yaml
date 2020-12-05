@@ -313,6 +313,193 @@ paths:
                             why: >-
                               BMI is used to calculate the creatinine clearance.
                               Dosing is higher for patients with higher BMI
+  /selectorConfig:
+    get:
+      summary: Selector configuration and default info for plugin(s)
+      description: >-
+        Gets list of selectors and their plugins, default parameter
+        settings, and required patient variables. Legal values for selectors is
+        optional, and if required, call the '/selectors' endpoint. Legal values
+        for a plugin's parameters and required patient variables, if any, can be
+        found with this call.
+      operationId: api.get_selector_config
+      parameters: []
+      responses:
+        '200':
+          description: Config matching query
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    selectors:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/PluginSelector'
+                    plugin:
+                      $ref: '#/components/schemas/Config'
+                  required:
+                  - selectors
+                  - plugin
+                  additionalProperties: false
+                example: {
+                  "selectors": [{
+                    "title": "FHIR URI - an URL (locator) or an URN (unique name)",
+                    "selectorValue": {
+                      "value": "http://hapi.fhir.org/baseR4",
+                      "title": "Happy FHIR base url"
+                    }
+                  }],
+                  "plugin": {
+                    "title": "DOAC variable mapper",
+                    "piid": "pdspi-mapper-DOAC",
+                    "pluginType": "m",
+                    "settingsDefaults": {
+                      "pluginSelectors": [ {
+                          "title": "FHIR URI - an URL (locator) or an URN (unique name)",
+                          "selectorValue": {
+                              "value": "http://hapi.fhir.org/baseR4",
+                              "title": "Happy FHIR base url" }
+                        }
+                      ],
+                      "modelParameters": [ 
+                        {
+                          "id": "current-time",
+                          "parameterDescription": "Compute variables relevant to this timestamp.",
+                          "parameterValue": { "value": "2019-09-20T00:00:01Z" },
+                          "legalValues": { "type": "string", "format": "time-stamp" }
+                        }
+                      ],
+                      "patientVariables": [
+                        {
+                          "id": "LOINC:30525-0",
+                          "title": "Age",
+                          "variableDescription": "Fractional age of patient relative to [current-time].",
+                          "legalValues": { "type": "number", "minimum": "0" },
+                        },
+                        {
+                          "id": "1114195.extant",
+                          "title": "Rivoroxaban, extant",
+                          "variableDescription": "Dosing of rivoroxaban, based on the finding of any rxnorm codes found on the record that map to rxCUI 1114195.",
+                          "legalValues": { "type": "number" } 
+                        },
+                        {
+                          "id": "1114195.intensity",
+                          "title": "Rivoroxaban, dosage",
+                          "variableDescription": "Dosing of rivoroxaban.",
+                          "legalValues": { "type": "number", "minimum": 0  } 
+                        },
+                        {
+                          "id": "HP:0001892.extant.days",
+                          "title": "Bleeding, days since",
+                          "variableDescription": "Days since the last bleeding event, relative to current-time. A value < -age means never. Bleeding events are identified by one of 50 ICD10 codes or 42 ICD9 codes.",
+                          "legalValues": { "type": "number" } 
+                        },
+                        {
+                          "id": "HP:0000077.extant.boolean",
+                          "title": "Kidney dysfunction, extant",
+                          "variableDescription": "If true, then Kidney dysfunction was found in the record for the patient, relative to current-time.",
+                          "legalValues": { "type": "boolean" },
+                        },
+                        {
+                          "id": "1114195.extant.count",
+                          "title": "Rivoroxaban dosing count",
+                          "variableDescription": "Number of times patient was dosed with Rivoroxaban.",
+                          "legalValues": { "type": "number" } 
+                        },
+                      ]
+                    }
+                  }
+                }
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+                    example:
+                      - timestamp: '2019-09-20T00:00:01Z'
+                        event: '[<piid>] is not a valid plugin'
+                        source: client
+                        level: 4
+                        action: Returning all plugins
+                  configs:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Config'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Message'
+                    example:
+                      - timestamp: '2019-09-20T00:00:01Z'
+                        event: >-
+                          No default Mapper and multiple compatible Mappers for
+                          FHIR server [pdspi-fhir-example].
+                        source: admin user
+                        level: 1
+                        action: ' Chose arbitrary Mapper[pdspi-mapper-example]'
+                  configs:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Config'
+                    example:
+                      - title: Aminoglycoside dosing guidance
+                        piid: pdspi-aminoglycoside-nomogram
+                        pluginType: g
+                        pluginSelectors:
+                          - title: Drug
+                            id: dosing.rxCUI
+                            selectorValue:
+                              value: 'rxCUI:1596450'
+                              title: Gentamicin
+                        pluginParameterDefaults:
+                          - id: 'pdspi-guidance-example:1'
+                            title: Extended interval nomogram
+                            parameterDescription: >-
+                              This calculator uses one of four extended-interval
+                              nomograms. Please choose one nomogram.
+                            parameterValue:
+                              value: Hartford
+                            legalValues:
+                              type: string
+                              enum:
+                                - Hartford
+                                - Urban-Craig
+                                - Conventional A
+                                - Conventional B
+                        requiredPatientVariables:
+                          - id: 'LOINC:30525-0'
+                            title: Age
+                            legalValues:
+                              type: number
+                              minimum: '0'
+                            why: >-
+                              Age is used to calculate the creatinine clearance.
+                              Dosing is lower for geriatric patient and
+                              contraindicated for pediatric patients
+                          - id: 'LOINC:39156-5'
+                            title: BMI
+                            legalValues:
+                              type: number
+                              minimum: '0'
+                            why: >-
+                              BMI is used to calculate the creatinine clearance.
+                              Dosing is higher for patients with higher BMI
   /selectors:
     get:
       summary: List all PDS selectors
